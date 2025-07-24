@@ -1,718 +1,2335 @@
 ---
-swagger: "2.0"
+openapi: 3.1.0
 info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
+  title: 티켓 거래 플랫폼 API Document
+  description: 티켓 거래 플랫폼의 서버 api 명세서
+  version: '1.0'
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+security:
+- {}
 tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
+- name: 회원 API
+  description: 회원과 관련된 API입니다.
 paths:
-  /pet/{petId}/uploadImage:
-    post:
-      tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
-      tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
-      tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
+  "/api/asks/{askId}":
     get:
       tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
+      - ask-controller
+      operationId: getAskController
       parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
+      - name: askId
+        in: path
         required: true
-        type: "array"
-        items:
-          type: "string"
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
+    put:
+      tags:
+      - ask-controller
+      operationId: updateAskController
+      parameters:
+      - name: askId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskUpdateDto"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
+  "/api/members/payment/ready":
+    post:
+      tags:
+      - payment-controller
+      operationId: paymentReady
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentInfoDto.Request"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentReadyDto.Response"
+  "/api/members/orders/create":
+    post:
+      tags:
+      - order-controller
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.order.dto.OrderCreateDto.Request"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.order.dto.OrderCreateDto.Response"
+  "/api/members/member/signup":
+    post:
+      tags:
+      - 회원 API
+      summary: 회원가입
+      description: 회원가입을 요청합니다. 일반 회원가입의 경우 사용합니다.
+      operationId: singUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberSignUpDto.Request"
+        required: true
+      responses:
+        '201':
+          description: 회원가입 성공
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberSignUpDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/members/member/logout":
+    post:
+      tags:
+      - 회원 API
+      summary: 로그아웃
+      description: 로그아웃을 요청합니다.
+      operationId: logout
+      responses:
+        '200':
+          description: 로그아웃 성공
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/login":
+    post:
+      tags:
+      - 회원 API
+      summary: 로그인
+      description: 로그인을 요청합니다. 일반 로그인의 경우 사용합니다.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 로그인 성공
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/members/member/find-password":
+    post:
+      tags:
+      - 회원 API
+      summary: 비밀번호 찾기
+      description: 아이디와 이메일 정보를 통해 비밀번호를 찾습니다. 소셜 회원의 경우 사용할 수 없습니다. 새로 생성된 비밀번호를
+        이메일로 발급하며 해당 비밀번호로 로그인 이후 비밀번호 변경을 유도합니다.
+      operationId: findPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindPasswordDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 비밀번호 재발급 성공
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/find-id":
+    post:
+      tags:
+      - 회원 API
+      summary: 아이디 찾기
+      description: 이메일 정보를 통해 아이디를 찾습니다. 소셜 회원은 사용하지 못합니다.
+      operationId: findMemberId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindIdDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 아이디 찾기 성공
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindIdDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/check-id":
+    post:
+      tags:
+      - 회원 API
+      summary: 아이디 중복 확인
+      description: 아이디 중복 여부를 확인합니다. 회원 가입 시 사용합니다.
+      operationId: checkMemberId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberCheckIdDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 사용 가능한 아이디
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/members/member/check-email":
+    post:
+      tags:
+      - 회원 API
+      summary: 이메일 중복 확인
+      description: 이메일의 중복 여부를 확인합니다. 회원 가입 시 사용합니다.
+      operationId: checkMemberEmailController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberCheckEmailDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 사용 가능한 이메일
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/mail/send-auth-mail":
+    post:
+      tags:
+      - mail-controller
+      operationId: sendAuthMailController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailSendDto.Request"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailSendDto.Response"
+  "/api/mail/check-auth":
+    post:
+      tags:
+      - mail-controller
+      operationId: checkAuthController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailAuthCheckDto.Request"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response"
+  "/api/chat/room/{roomId}/exit":
+    post:
+      tags:
+      - chat-api-controller
+      operationId: exitChatRoom
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+  "/api/chat/room/{roomId}/enter":
+    post:
+      tags:
+      - chat-api-controller
+      operationId: enterChatRoom
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+  "/api/auctions":
+    get:
+      tags:
+      - auction-controller
+      operationId: getAuctionListController
+      parameters:
+      - name: word
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: mainCategory
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: subCategory
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sorted
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.auction.dto.AuctionGetDto.Response"
+    post:
+      tags:
+      - auction-controller
+      operationId: createAuctionController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                thumbnail:
+                  type: string
+                  format: binary
+                imageList:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                createDto:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionCreateDto.Request"
+              required:
+              - createDto
+              - thumbnail
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionCreateDto.Response"
+  "/api/auctions/{auctionId}":
+    get:
+      tags:
+      - auction-controller
+      operationId: getAuctionController
+      parameters:
+      - name: auctionId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetDto.Response"
+    post:
+      tags:
+      - auction-controller
+      operationId: instantPurchaseAuctionController
+      parameters:
+      - name: auctionId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/auctions/{auctionId}/confirm":
+    post:
+      tags:
+      - auction-controller
+      operationId: confirmAuctionController
+      parameters:
+      - name: auctionId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionConfirmDto.Request"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/asks":
+    get:
+      tags:
+      - ask-controller
+      operationId: getAskList
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.ask.dto.AskGetDto.Response"
+    post:
+      tags:
+      - ask-controller
+      operationId: createAskController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskCreateDto"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
+    delete:
+      tags:
+      - ask-controller
+      operationId: deleteAskController
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/answers":
+    get:
+      tags:
+      - answer-controller
+      operationId: getAnswerListController
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.answer.dto.AnswerGetDto.Response"
+    post:
+      tags:
+      - answer-controller
+      operationId: createAnswerController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageList:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                createDto:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerCreateDto"
+              required:
+              - createDto
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
+    delete:
+      tags:
+      - answer-controller
+      operationId: deleteAnswerController
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/answers/{answerId}":
+    get:
+      tags:
+      - answer-controller
+      operationId: getAnswerController
+      parameters:
+      - name: answerId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
+    post:
+      tags:
+      - answer-controller
+      operationId: updateAnswerController
+      parameters:
+      - name: answerId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageList:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                updateDto:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerUpdateDto"
+              required:
+              - updateDto
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
+  "/api/members/member/change-password":
+    patch:
+      tags:
+      - 회원 API
+      summary: 비밀번호 변경
+      description: 사용 중인 비밀번호를 변경합니다. 소셜 회원은 사용할 수 없습니다.
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangePasswordDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 비밀번호 변경 성공
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/change-email":
+    patch:
+      tags:
+      - 회원 API
+      summary: 이메일 변경
+      description: 사용 중인 이메일을 변경합니다. 소셜 회원은 사용할 수 없습니다.
+      operationId: changeEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangeEmailDto.Request"
+        required: true
+      responses:
+        '200':
+          description: 이메일 변경 성공
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangeEmailDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/transactions/sales":
+    get:
+      tags:
+      - transaction-controller
+      operationId: getTransactionListBySellerController
+      parameters:
+      - name: word
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: transTypeString
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sorted
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: endDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.transaction.dto.TransactionGetDto.Response"
+  "/api/transactions/purchases":
+    get:
+      tags:
+      - transaction-controller
+      operationId: getTransactionListByBuyerController
+      parameters:
+      - name: word
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: transTypeString
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sorted
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: endDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.transaction.dto.TransactionGetDto.Response"
+  "/api/members/points":
+    get:
+      tags:
+      - point-controller
+      operationId: getPointBalance
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.point.dto.PointBalanceDto.Response"
+  "/api/members/points/history":
+    get:
+      tags:
+      - point-controller
+      operationId: getPointList
+      parameters:
+      - name: startDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: endDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: sorted
+        in: query
+        required: false
+        schema:
+          type: string
+          default: latest
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response"
+  "/api/members/payment/fail":
+    get:
+      tags:
+      - payment-controller
+      operationId: paymentFail
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentFailDto.Response"
+  "/api/members/payment/cancel":
+    get:
+      tags:
+      - payment-controller
+      operationId: paymentCancel
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentCancelDto.Response"
+  "/api/members/payment/approve":
+    get:
+      tags:
+      - payment-controller
+      operationId: paymentApprove
+      parameters:
+      - name: partner_order_id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: pg_token
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentApproveDto.Response"
+  "/api/members/notification":
+    get:
+      tags:
+      - notification-controller
+      operationId: getNotificationList
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.notification.dto.NotificationDto.Response"
+  "/api/members/notification/subscribe":
+    get:
+      tags:
+      - notification-controller
+      operationId: subscribe
+      parameters:
+      - name: Last-Event-ID
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                "$ref": "#/components/schemas/org.springframework.web.servlet.mvc.method.annotation.SseEmitter"
+  "/api/members/member":
+    get:
+      tags:
+      - 회원 API
+      summary: 로그인한 회원 정보 조회
+      description: 로그인한 회원의 정보를 조회합니다.
+      operationId: getMemberController
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - 회원 API
+      summary: 회원 탈퇴
+      description: 회원 탈퇴를 진행합니다. 회원 데이터는 소프트딜리트 처리됩니다.
+      operationId: deleteMemberController
+      responses:
+        '200':
+          description: 회원 탈퇴 성공
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/chat/rooms":
+    get:
+      tags:
+      - chat-api-controller
+      operationId: getChatRoomList
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.chat.domain.dto.ChatRoomCreateDto.Response"
+  "/api/chat/rooms/{roomId}/messages":
+    get:
+      tags:
+      - chat-api-controller
+      operationId: getChatMessages
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.chat.domain.dto.ChatMessageSendDto.Response"
+  "/api/chat/rooms/search":
+    get:
+      tags:
+      - chat-api-controller
+      operationId: searchChatRooms
+      parameters:
+      - name: title
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.chat.domain.dto.ChatRoomCreateDto.Response"
+  "/api/categories":
+    get:
+      tags:
+      - category-controller
+      operationId: getAllCategories
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryDto"
+  "/api/bids":
+    get:
+      tags:
+      - bid-controller
+      operationId: getBidListController
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.bid.dto.BidGetDto.Response"
+  "/api/auctions/top5":
+    get:
+      tags:
+      - auction-controller
+      operationId: getTop5Controller
+      parameters:
+      - name: mainCategory
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: subCategory
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetDto.Response"
+  "/api/auctions/recent":
+    get:
+      tags:
+      - auction-controller
+      operationId: getAuctionRecentListController
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionRecentDto"
+components:
+  schemas:
+    com.ddang.usedauction.ask.dto.AskUpdateDto:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 1
+      required:
+      - content
+    com.ddang.usedauction.answer.dto.AnswerGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        auctionId:
+          type: integer
+          format: int64
+        auctionTitle:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        writerId:
+          type: string
+        imageList:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.image.dto.ImageGetDto.Response"
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.ask.dto.AskGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        auctionId:
+          type: integer
+          format: int64
+        auctionTitle:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        writerId:
+          type: string
+        answerList:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.image.dto.ImageGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        imageUrl:
+          type: string
+        imageName:
+          type: string
+        imageType:
+          type: string
           enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
-      tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
+          - THUMBNAIL
+          - NORMAL
+        answerId:
+          type: integer
+          format: int64
+        auctionId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.payment.dto.PaymentInfoDto.Request:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+        price:
+          type: integer
+          format: int64
+          minimum: 1
+      required:
+      - memberId
+      - orderId
+    com.ddang.usedauction.payment.dto.PaymentReadyDto.Response:
+      type: object
+      properties:
+        tid:
+          type: string
+        next_redirect_pc_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    com.ddang.usedauction.order.dto.OrderCreateDto.Request:
+      type: object
+      properties:
+        price:
+          type: integer
+          format: int32
+    com.ddang.usedauction.order.dto.OrderCreateDto.Response:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+    com.ddang.usedauction.member.dto.MemberSignUpDto.Response:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 회원가입된 아이디
+          example: test
+    com.ddang.usedauction.member.dto.MemberSignUpDto.Request:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 아이디
+          example: test
+          minLength: 1
+          pattern: "^[a-z0-9]{6,12}$"
+        password:
+          type: string
+          description: 비밀번호
+          example: abc1234
+          minLength: 1
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+        confirmPassword:
+          type: string
+          description: 비밀번호 확인
+          example: abc1234
+          minLength: 1
+        email:
+          type: string
+          description: 이메일
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+      required:
+      - confirmPassword
+      - email
+      - memberId
+      - password
+    com.ddang.usedauction.member.dto.MemberLoginDto.Response:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: 액세스 토큰
+          example: fjasdk;ghjioewjaklasdfkvljiorjewklafjdjafjgkheraklhkljdhsfjkv
+        memberId:
+          type: string
+          description: 회원 아이디
+          example: test
+    com.ddang.usedauction.member.dto.MemberLoginDto.Request:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 아이디
+          example: test
+          minLength: 1
+        password:
+          type: string
+          description: 비밀번호
+          example: abc1234
+          minLength: 1
+      required:
+      - memberId
+      - password
+    com.ddang.usedauction.member.dto.MemberFindPasswordDto.Request:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 회원 아이디
+          example: test
+          minLength: 1
+        email:
+          type: string
+          description: 이메일 주소
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+      required:
+      - email
+      - memberId
+    com.ddang.usedauction.member.dto.MemberFindIdDto.Response:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 조회된 회원 아이디
+          example: test
+    com.ddang.usedauction.member.dto.MemberFindIdDto.Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 이메일 주소
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+      required:
+      - email
+    com.ddang.usedauction.member.dto.MemberCheckIdDto.Request:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 중복 확인할 아이디
+          example: test
+          minLength: 1
+          pattern: "^[a-z0-9]{6,12}$"
+      required:
+      - memberId
+    com.ddang.usedauction.member.dto.MemberCheckEmailDto.Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 중복 확인할 이메일 주소
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+      required:
+      - email
+    com.ddang.usedauction.mail.dto.MailSendDto.Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 받을 이메일 주소
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+      required:
+      - email
+    com.ddang.usedauction.mail.dto.MailSendDto.Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 전송 받을 이메일 주소
+          example: test@naver.com
+    com.ddang.usedauction.mail.dto.MailAuthCheckDto.Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 인증번호를 전송받은 이메일
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+        authNum:
+          type: string
+          description: 인증번호
+          example: 2123
+          minLength: 1
+          pattern: "^[0-9]{4}$"
+      required:
+      - authNum
+      - email
+    com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 인증된 이메일 주소
+          example: test@naver.com
+    com.ddang.usedauction.auction.dto.AuctionCreateDto.Request:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          minLength: 0
+        receiveType:
+          type: string
+          enum:
+          - CONTACT
+          - DELIVERY
+          - ALL
+        deliveryType:
+          type: string
+          enum:
+          - PREPAY
+          - NO_PREPAY
+          - NO_DELIVERY
+        contactPlace:
+          type: string
+          maxLength: 255
+          minLength: 0
+        startPrice:
+          type: integer
+          format: int64
+        instantPrice:
+          type: integer
+          format: int64
+        endedAt:
+          type: string
+          format: date-time
+        parentCategoryId:
+          type: integer
+          format: int64
+        childCategoryId:
+          type: integer
+          format: int64
+        productName:
+          type: string
+          maxLength: 255
+          minLength: 0
+        productStatus:
+          type: number
+          format: double
+          maximum: 5
+          minimum: 0
+        productColor:
+          type: string
+          maxLength: 255
+          minLength: 0
+        productDescription:
+          type: string
+          maxLength: 5000
+          minLength: 0
+        deliveryPrice:
+          type: string
+          maxLength: 255
+          minLength: 0
+      required:
+      - childCategoryId
+      - parentCategoryId
+      - productName
+      - title
+    com.ddang.usedauction.auction.dto.AuctionCreateDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+    com.ddang.usedauction.auction.dto.AuctionConfirmDto.Request:
+      type: object
+      properties:
+        price:
+          type: integer
+          format: int64
+        sellerId:
+          type: integer
+          format: int64
+    com.ddang.usedauction.ask.dto.AskCreateDto:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        content:
+          type: string
+          minLength: 1
+        auctionId:
+          type: integer
+          format: int64
+      required:
+      - auctionId
+      - content
+      - title
+    com.ddang.usedauction.answer.dto.AnswerCreateDto:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        content:
+          type: string
+          minLength: 1
+        auctionId:
+          type: integer
+          format: int64
+        askId:
+          type: integer
+          format: int64
+      required:
+      - askId
+      - auctionId
+      - content
+      - title
+    com.ddang.usedauction.answer.dto.AnswerUpdateDto:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 1
+        imageFileNameList:
+          type: array
           items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
+            type: string
+            minLength: 1
+      required:
+      - content
+    com.ddang.usedauction.member.dto.MemberChangePasswordDto.Request:
+      type: object
+      properties:
+        curPassword:
+          type: string
+          description: 변경 전 패스워드
+          example: abc123
+          minLength: 1
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+        newPassword:
+          type: string
+          description: 변경할 패스워드
+          example: abc123
+          minLength: 1
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+        confirmPassword:
+          type: string
+          description: 변경할 패스워드 확인
+          example: abc123
+          minLength: 1
+      required:
+      - confirmPassword
+      - curPassword
+      - newPassword
+    com.ddang.usedauction.member.dto.MemberChangeEmailDto.Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 변경된 이메일 주소
+          example: test@naver.com
+    com.ddang.usedauction.member.dto.MemberChangeEmailDto.Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 변경할 이메일 주소
+          example: test@naver.com
+          minLength: 1
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+      required:
+      - email
+    org.springdoc.core.converters.models.Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
           items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+            type: string
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        unsorted:
+          type: boolean
+        sorted:
+          type: boolean
+    com.ddang.usedauction.transaction.dto.TransactionGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        auctionId:
+          type: integer
+          format: int64
+        thumbnailUrl:
+          type: string
+        productName:
+          type: string
+        productStatus:
+          type: number
+          format: double
+        productColor:
+          type: string
+        startPrice:
+          type: integer
+          format: int64
+        instantPrice:
+          type: integer
+          format: int64
+        sellerEmail:
+          type: string
+        buyerId:
+          type: string
+        salePrice:
+          type: integer
+          format: int64
+        transType:
+          type: string
+          enum:
+          - SUCCESS
+          - NONE
+          - CONTINUE
+        buyType:
+          type: string
+          enum:
+          - SUCCESSFUL_BID
+          - NO_BUY
+          - INSTANT
+        receiveType:
+          type: string
+          enum:
+          - CONTACT
+          - DELIVERY
+          - ALL
+        saleDate:
+          type: string
+          format: date-time
+    org.springframework.data.domain.PageCom.ddang.usedauction.transaction.dto.TransactionGetDto.Response:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.transaction.dto.TransactionGetDto.Response"
+        number:
+          type: integer
+          format: int32
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    com.ddang.usedauction.point.dto.PointBalanceDto.Response:
+      type: object
+      properties:
+        pointAmount:
+          type: integer
+          format: int64
+    com.ddang.usedauction.point.dto.PointHistoryDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        pointType:
+          type: string
+          enum:
+          - USE
+          - GET
+          - CHARGE
+        pointAmount:
+          type: integer
+          format: int64
+        curPointAmount:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+    org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.point.dto.PointHistoryDto.Response"
+        number:
+          type: integer
+          format: int32
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    com.ddang.usedauction.payment.dto.PaymentFailDto.Response:
+      type: object
+      properties:
+        message:
+          type: string
+    com.ddang.usedauction.payment.dto.PaymentCancelDto.Response:
+      type: object
+      properties:
+        message:
+          type: string
+    com.ddang.usedauction.payment.dto.Amount:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+        tax_free:
+          type: integer
+          format: int32
+    com.ddang.usedauction.payment.dto.PaymentApproveDto.Response:
+      type: object
+      properties:
+        aid:
+          type: string
+        tid:
+          type: string
+        cid:
+          type: string
+        partner_order_id:
+          type: string
+        partner_user_id:
+          type: string
+        payment_method_type:
+          type: string
+        amount:
+          "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.Amount"
+        item_name:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+          format: date-time
+        approved_at:
+          type: string
+          format: date-time
+    com.ddang.usedauction.notification.dto.NotificationDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+        auctionId:
+          type: integer
+          format: int64
+        content:
+          type: string
+        notificationType:
+          type: string
+          enum:
+          - DONE
+          - DONE_INSTANT
+          - QUESTION
+          - ANSWER
+          - CONFIRM
+        createdAt:
+          type: string
+          format: date-time
+    org.springframework.web.servlet.mvc.method.annotation.SseEmitter:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+    com.ddang.usedauction.member.dto.MemberGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 회원 pk
+          example: 1
+        memberId:
+          type: string
+          description: 회원 아이디
+          example: test
+        email:
+          type: string
+          description: 이메일
+          example: test@naver.com
+        siteAlarm:
+          type: boolean
+          description: 알림 수락 여부
+          example: true
+        point:
+          type: integer
+          format: int64
+          description: 보유 포인트
+          example: 1000
+        social:
+          type: string
+          description: 소셜 로그인 주체
+          example: kakao
+        socialProviderId:
+          type: string
+          description: 소셜 로그인 고유 아이디
+          example: kldasjf213
+        createdAt:
+          type: string
+          format: date-time
+          description: 회원 가입 날짜
+          example: 1900-01-01 11:11
+    com.ddang.usedauction.auction.dto.AuctionGetForChatDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        thumbnail:
+          type: string
+    com.ddang.usedauction.chat.domain.dto.ChatRoomCreateDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        seller:
+          "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetForChatDto"
+        buyer:
+          "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetForChatDto"
+        auction:
+          "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetForChatDto"
+        unReadCnt:
+          type: integer
+          format: int32
+        lastMessage:
+          type: string
+        lastMessageTime:
+          type: string
+          format: date-time
+    com.ddang.usedauction.member.dto.MemberGetForChatDto:
+      type: object
+      properties:
+        memberId:
+          type: string
+        social:
+          type: string
+    com.ddang.usedauction.chat.domain.dto.ChatMessageSendDto.Response:
+      type: object
+      properties:
+        roomId:
+          type: integer
+          format: int64
+        senderId:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.category.dto.CategoryDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+        imageUrl:
+          type: string
+        categories:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.ChildCategoryDto"
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.category.dto.ChildCategoryDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+        parentId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.bid.dto.BidGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        bidPrice:
+          type: integer
+          format: int64
+        auctionId:
+          type: integer
+          format: int64
+        auctionTitle:
+          type: string
+        thumbnailImageUrl:
+          type: string
+        memberId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    org.springframework.data.domain.PageCom.ddang.usedauction.bid.dto.BidGetDto.Response:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.bid.dto.BidGetDto.Response"
+        number:
+          type: integer
+          format: int32
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    com.ddang.usedauction.auction.dto.AuctionGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        auctionState:
+          type: string
+          enum:
+          - CONTINUE
+          - END
+        productName:
+          type: string
+        productColor:
+          type: string
+        productStatus:
+          type: number
+          format: double
+        productDescription:
+          type: string
+        receiveType:
+          type: string
+          enum:
+          - CONTACT
+          - DELIVERY
+          - ALL
+        contactPlace:
+          type: string
+        deliveryType:
+          type: string
+          enum:
+          - PREPAY
+          - NO_PREPAY
+          - NO_DELIVERY
+        deliveryPrice:
+          type: string
+        currentPrice:
+          type: integer
+          format: int64
+        startPrice:
+          type: integer
+          format: int64
+        instantPrice:
+          type: integer
+          format: int64
+        memberCount:
+          type: integer
+          format: int64
+        endedAt:
+          type: string
+          format: date-time
+        seller:
+          "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetDto.Response"
+        parentCategory:
+          "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
+        childCategory:
+          "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
+        bidList:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.bid.dto.BidGetDto.Response"
+        askList:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
+        imageList:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.image.dto.ImageGetDto.Response"
+        createdAt:
+          type: string
+          format: date-time
+    com.ddang.usedauction.category.dto.CategoryGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+        parentId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+    org.springframework.data.domain.PageCom.ddang.usedauction.auction.dto.AuctionGetDto.Response:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetDto.Response"
+        number:
+          type: integer
+          format: int32
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    com.ddang.usedauction.auction.dto.AuctionRecentDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        auctionTitle:
+          type: string
+        imageUrl:
+          type: string
+    org.springframework.data.domain.PageCom.ddang.usedauction.ask.dto.AskGetDto.Response:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
+        number:
+          type: integer
+          format: int32
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    org.springframework.data.domain.PageCom.ddang.usedauction.answer.dto.AnswerGetDto.Response:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
+        number:
+          type: integer
+          format: int32
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
