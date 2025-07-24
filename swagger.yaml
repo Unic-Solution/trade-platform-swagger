@@ -10,6 +10,8 @@ servers:
 security:
 - {}
 tags:
+- name: 메일 API
+  description: 메일 관련 API 입니다.
 - name: 회원 API
   description: 회원과 관련된 API입니다.
 paths:
@@ -370,7 +372,9 @@ paths:
   "/api/mail/send-auth-mail":
     post:
       tags:
-      - mail-controller
+      - 메일 API
+      summary: 인증 메일 전송
+      description: 인증번호를 메일로 전송합니다.
       operationId: sendAuthMailController
       requestBody:
         content:
@@ -380,15 +384,35 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: 메일 전송 성공
           content:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailSendDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
   "/api/mail/check-auth":
     post:
       tags:
-      - mail-controller
+      - 메일 API
+      summary: 인증번호 일치 여부 확인
+      description: 사용자가 작성한 인증번호와 이메일로 발송한 인증번호가 일치하는지 확인합니다.
       operationId: checkAuthController
       requestBody:
         content:
@@ -398,11 +422,29 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: 인증번호 일치함
           content:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
   "/api/chat/room/{roomId}/exit":
     post:
       tags:
@@ -1481,6 +1523,13 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
+    com.ddang.usedauction.mail.dto.MailSendDto.Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 전송 받을 이메일 주소
+          example: test@naver.com
     com.ddang.usedauction.mail.dto.MailSendDto.Request:
       type: object
       properties:
@@ -1492,12 +1541,12 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
-    com.ddang.usedauction.mail.dto.MailSendDto.Response:
+    com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response:
       type: object
       properties:
         email:
           type: string
-          description: 전송 받을 이메일 주소
+          description: 인증된 이메일 주소
           example: test@naver.com
     com.ddang.usedauction.mail.dto.MailAuthCheckDto.Request:
       type: object
@@ -1517,13 +1566,6 @@ components:
       required:
       - authNum
       - email
-    com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response:
-      type: object
-      properties:
-        email:
-          type: string
-          description: 인증된 이메일 주소
-          example: test@naver.com
     com.ddang.usedauction.auction.dto.AuctionCreateDto.Request:
       type: object
       properties:
@@ -1719,10 +1761,10 @@ components:
           format: int64
         sort:
           "$ref": "#/components/schemas/SortObject"
-        pageNumber:
+        pageSize:
           type: integer
           format: int32
-        pageSize:
+        pageNumber:
           type: integer
           format: int32
         unpaged:
