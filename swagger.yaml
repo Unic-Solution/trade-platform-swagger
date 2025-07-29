@@ -17,51 +17,6 @@ tags:
 - name: 회원 API
   description: 회원과 관련된 API입니다.
 paths:
-  "/api/asks/{askId}":
-    get:
-      tags:
-      - ask-controller
-      operationId: getAskController
-      parameters:
-      - name: askId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
-    put:
-      tags:
-      - ask-controller
-      operationId: updateAskController
-      parameters:
-      - name: askId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskUpdateDto"
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
   "/api/payment/payment/ready":
     post:
       tags:
@@ -447,324 +402,6 @@ paths:
             "*/*":
               schema:
                 type: string
-  "/api/chat/room/{roomId}/exit":
-    post:
-      tags:
-      - chat-api-controller
-      operationId: exitChatRoom
-      parameters:
-      - name: roomId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        '200':
-          description: OK
-  "/api/chat/room/{roomId}/enter":
-    post:
-      tags:
-      - chat-api-controller
-      operationId: enterChatRoom
-      parameters:
-      - name: roomId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        '200':
-          description: OK
-  "/api/auctions":
-    get:
-      tags:
-      - auction-controller
-      operationId: getAuctionListController
-      parameters:
-      - name: word
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: mainCategory
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: subCategory
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sorted
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.auction.dto.AuctionGetDto.Response"
-    post:
-      tags:
-      - auction-controller
-      operationId: createAuctionController
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                thumbnail:
-                  type: string
-                  format: binary
-                imageList:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-                createDto:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionCreateDto.Request"
-              required:
-              - createDto
-              - thumbnail
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionCreateDto.Response"
-  "/api/auctions/{auctionId}":
-    get:
-      tags:
-      - auction-controller
-      operationId: getAuctionController
-      parameters:
-      - name: auctionId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetDto.Response"
-    post:
-      tags:
-      - auction-controller
-      operationId: instantPurchaseAuctionController
-      parameters:
-      - name: auctionId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: string
-  "/api/auctions/{auctionId}/confirm":
-    post:
-      tags:
-      - auction-controller
-      operationId: confirmAuctionController
-      parameters:
-      - name: auctionId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionConfirmDto.Request"
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: string
-  "/api/asks":
-    get:
-      tags:
-      - ask-controller
-      operationId: getAskList
-      parameters:
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.ask.dto.AskGetDto.Response"
-    post:
-      tags:
-      - ask-controller
-      operationId: createAskController
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskCreateDto"
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
-    delete:
-      tags:
-      - ask-controller
-      operationId: deleteAskController
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: string
-  "/api/answers":
-    get:
-      tags:
-      - answer-controller
-      operationId: getAnswerListController
-      parameters:
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.answer.dto.AnswerGetDto.Response"
-    post:
-      tags:
-      - answer-controller
-      operationId: createAnswerController
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                imageList:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-                createDto:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerCreateDto"
-              required:
-              - createDto
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
-    delete:
-      tags:
-      - answer-controller
-      operationId: deleteAnswerController
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: string
-  "/api/answers/{answerId}":
-    get:
-      tags:
-      - answer-controller
-      operationId: getAnswerController
-      parameters:
-      - name: answerId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
-    post:
-      tags:
-      - answer-controller
-      operationId: updateAnswerController
-      parameters:
-      - name: answerId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                imageList:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-                updateDto:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerUpdateDto"
-              required:
-              - updateDto
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
   "/api/members/member/change-password":
     patch:
       tags:
@@ -857,96 +494,6 @@ paths:
                 type: string
       security:
       - bearerAuth: []
-  "/api/transactions/sales":
-    get:
-      tags:
-      - transaction-controller
-      operationId: getTransactionListBySellerController
-      parameters:
-      - name: word
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: transTypeString
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sorted
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: startDate
-        in: query
-        required: false
-        schema:
-          type: string
-          format: date
-      - name: endDate
-        in: query
-        required: false
-        schema:
-          type: string
-          format: date
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.transaction.dto.TransactionGetDto.Response"
-  "/api/transactions/purchases":
-    get:
-      tags:
-      - transaction-controller
-      operationId: getTransactionListByBuyerController
-      parameters:
-      - name: word
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: transTypeString
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sorted
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: startDate
-        in: query
-        required: false
-        schema:
-          type: string
-          format: date
-      - name: endDate
-        in: query
-        required: false
-        schema:
-          type: string
-          format: date
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.transaction.dto.TransactionGetDto.Response"
   "/api/payment/payment/fail":
     get:
       tags:
@@ -1081,39 +628,6 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response"
-  "/api/members/notification":
-    get:
-      tags:
-      - notification-controller
-      operationId: getNotificationList
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.notification.dto.NotificationDto.Response"
-  "/api/members/notification/subscribe":
-    get:
-      tags:
-      - notification-controller
-      operationId: subscribe
-      parameters:
-      - name: Last-Event-ID
-        in: header
-        required: false
-        schema:
-          type: string
-          default: ''
-      responses:
-        '200':
-          description: OK
-          content:
-            text/event-stream:
-              schema:
-                "$ref": "#/components/schemas/org.springframework.web.servlet.mvc.method.annotation.SseEmitter"
   "/api/members/member":
     get:
       tags:
@@ -1193,214 +707,76 @@ paths:
                 type: string
       security:
       - bearerAuth: []
-  "/api/chat/rooms":
+  "/api/categories":
     get:
       tags:
-      - chat-api-controller
-      operationId: getChatRoomList
+      - category-controller
+      summary: 카테고리 리스트 조회
+      description: 카테고리 리스트를 조회합니다. 자식 카테고리까지 함께 조회하며 자식 카테고리는 비어있을 수 있습니다.
+      operationId: getCategoriesController
       responses:
         '200':
-          description: OK
+          description: 카테고리 리스트 조회 성공
           content:
             "*/*":
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.chat.domain.dto.ChatRoomCreateDto.Response"
-  "/api/chat/rooms/{roomId}/messages":
+                  "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryTreeDto.Response"
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/categories/category/{categoryId}":
     get:
       tags:
-      - chat-api-controller
-      operationId: getChatMessages
+      - category-controller
+      summary: 카테고리 상세 조회
+      description: 특정 하나의 카테고리에 대하여 조회합니다.
+      operationId: getCategoryController
       parameters:
-      - name: roomId
+      - name: categoryId
         in: path
         required: true
         schema:
           type: integer
           format: int64
+          exclusiveMinimum: 0
       responses:
         '200':
-          description: OK
+          description: 카테고리 조회 성공
           content:
             "*/*":
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.chat.domain.dto.ChatMessageSendDto.Response"
-  "/api/chat/rooms/search":
-    get:
-      tags:
-      - chat-api-controller
-      operationId: searchChatRooms
-      parameters:
-      - name: title
-        in: query
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
+                "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
+        '400':
+          description: 클라이언트 에러
           content:
             "*/*":
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.chat.domain.dto.ChatRoomCreateDto.Response"
-  "/api/categories":
-    get:
-      tags:
-      - category-controller
-      operationId: getAllCategories
-      responses:
-        '200':
-          description: OK
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
           content:
             "*/*":
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryDto"
-  "/api/bids":
-    get:
-      tags:
-      - bid-controller
-      operationId: getBidListController
-      parameters:
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
-      responses:
-        '200':
-          description: OK
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
           content:
             "*/*":
               schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.bid.dto.BidGetDto.Response"
-  "/api/auctions/top5":
-    get:
-      tags:
-      - auction-controller
-      operationId: getTop5Controller
-      parameters:
-      - name: mainCategory
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: subCategory
-        in: query
-        required: false
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetDto.Response"
-  "/api/auctions/recent":
-    get:
-      tags:
-      - auction-controller
-      operationId: getAuctionRecentListController
-      responses:
-        '200':
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionRecentDto"
+                type: string
 components:
   schemas:
-    com.ddang.usedauction.ask.dto.AskUpdateDto:
-      type: object
-      properties:
-        content:
-          type: string
-          minLength: 1
-      required:
-      - content
-    com.ddang.usedauction.answer.dto.AnswerGetDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        auctionId:
-          type: integer
-          format: int64
-        auctionTitle:
-          type: string
-        title:
-          type: string
-        content:
-          type: string
-        writerId:
-          type: string
-        imageList:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.image.dto.ImageGetDto.Response"
-        createdAt:
-          type: string
-          format: date-time
-    com.ddang.usedauction.ask.dto.AskGetDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        auctionId:
-          type: integer
-          format: int64
-        auctionTitle:
-          type: string
-        title:
-          type: string
-        content:
-          type: string
-        writerId:
-          type: string
-        answerList:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
-        createdAt:
-          type: string
-          format: date-time
-    com.ddang.usedauction.image.dto.ImageGetDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        imageUrl:
-          type: string
-        imageName:
-          type: string
-        imageType:
-          type: string
-          enum:
-          - THUMBNAIL
-          - NORMAL
-        answerId:
-          type: integer
-          format: int64
-        auctionId:
-          type: integer
-          format: int64
-        createdAt:
-          type: string
-          format: date-time
     com.ddang.usedauction.payment.dto.PaymentInfoDto.Request:
       type: object
       properties:
@@ -1607,136 +983,6 @@ components:
       required:
       - authNum
       - email
-    com.ddang.usedauction.auction.dto.AuctionCreateDto.Request:
-      type: object
-      properties:
-        title:
-          type: string
-          maxLength: 255
-          minLength: 0
-        receiveType:
-          type: string
-          enum:
-          - CONTACT
-          - DELIVERY
-          - ALL
-        deliveryType:
-          type: string
-          enum:
-          - PREPAY
-          - NO_PREPAY
-          - NO_DELIVERY
-        contactPlace:
-          type: string
-          maxLength: 255
-          minLength: 0
-        startPrice:
-          type: integer
-          format: int64
-        instantPrice:
-          type: integer
-          format: int64
-        endedAt:
-          type: string
-          format: date-time
-        parentCategoryId:
-          type: integer
-          format: int64
-        childCategoryId:
-          type: integer
-          format: int64
-        productName:
-          type: string
-          maxLength: 255
-          minLength: 0
-        productStatus:
-          type: number
-          format: double
-          maximum: 5
-          minimum: 0
-        productColor:
-          type: string
-          maxLength: 255
-          minLength: 0
-        productDescription:
-          type: string
-          maxLength: 5000
-          minLength: 0
-        deliveryPrice:
-          type: string
-          maxLength: 255
-          minLength: 0
-      required:
-      - childCategoryId
-      - parentCategoryId
-      - productName
-      - title
-    com.ddang.usedauction.auction.dto.AuctionCreateDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-    com.ddang.usedauction.auction.dto.AuctionConfirmDto.Request:
-      type: object
-      properties:
-        price:
-          type: integer
-          format: int64
-        sellerId:
-          type: integer
-          format: int64
-    com.ddang.usedauction.ask.dto.AskCreateDto:
-      type: object
-      properties:
-        title:
-          type: string
-          minLength: 1
-        content:
-          type: string
-          minLength: 1
-        auctionId:
-          type: integer
-          format: int64
-      required:
-      - auctionId
-      - content
-      - title
-    com.ddang.usedauction.answer.dto.AnswerCreateDto:
-      type: object
-      properties:
-        title:
-          type: string
-          minLength: 1
-        content:
-          type: string
-          minLength: 1
-        auctionId:
-          type: integer
-          format: int64
-        askId:
-          type: integer
-          format: int64
-      required:
-      - askId
-      - auctionId
-      - content
-      - title
-    com.ddang.usedauction.answer.dto.AnswerUpdateDto:
-      type: object
-      properties:
-        content:
-          type: string
-          minLength: 1
-        imageFileNameList:
-          type: array
-          items:
-            type: string
-            minLength: 1
-      required:
-      - content
     com.ddang.usedauction.member.dto.MemberChangePasswordDto.Request:
       type: object
       properties:
@@ -1779,132 +1025,6 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
-    org.springdoc.core.converters.models.Pageable:
-      type: object
-      properties:
-        page:
-          type: integer
-          format: int32
-          minimum: 0
-        size:
-          type: integer
-          format: int32
-          minimum: 1
-        sort:
-          type: array
-          items:
-            type: string
-    PageableObject:
-      type: object
-      properties:
-        offset:
-          type: integer
-          format: int64
-        sort:
-          "$ref": "#/components/schemas/SortObject"
-        paged:
-          type: boolean
-        unpaged:
-          type: boolean
-        pageSize:
-          type: integer
-          format: int32
-        pageNumber:
-          type: integer
-          format: int32
-    SortObject:
-      type: object
-      properties:
-        empty:
-          type: boolean
-        unsorted:
-          type: boolean
-        sorted:
-          type: boolean
-    com.ddang.usedauction.transaction.dto.TransactionGetDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        auctionId:
-          type: integer
-          format: int64
-        thumbnailUrl:
-          type: string
-        productName:
-          type: string
-        productStatus:
-          type: number
-          format: double
-        productColor:
-          type: string
-        startPrice:
-          type: integer
-          format: int64
-        instantPrice:
-          type: integer
-          format: int64
-        sellerEmail:
-          type: string
-        buyerId:
-          type: string
-        salePrice:
-          type: integer
-          format: int64
-        transType:
-          type: string
-          enum:
-          - SUCCESS
-          - NONE
-          - CONTINUE
-        buyType:
-          type: string
-          enum:
-          - SUCCESSFUL_BID
-          - NO_BUY
-          - INSTANT
-        receiveType:
-          type: string
-          enum:
-          - CONTACT
-          - DELIVERY
-          - ALL
-        saleDate:
-          type: string
-          format: date-time
-    org.springframework.data.domain.PageCom.ddang.usedauction.transaction.dto.TransactionGetDto.Response:
-      type: object
-      properties:
-        totalPages:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        first:
-          type: boolean
-        last:
-          type: boolean
-        size:
-          type: integer
-          format: int32
-        content:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.transaction.dto.TransactionGetDto.Response"
-        number:
-          type: integer
-          format: int32
-        sort:
-          "$ref": "#/components/schemas/SortObject"
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
-        empty:
-          type: boolean
     com.ddang.usedauction.payment.dto.PaymentFailDto.Response:
       type: object
       properties:
@@ -1958,6 +1078,48 @@ components:
         pointAmount:
           type: integer
           format: int64
+    org.springdoc.core.converters.models.Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
+          items:
+            type: string
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          "$ref": "#/components/schemas/SortObject"
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
     com.ddang.usedauction.point.dto.PointHistoryDto.Response:
       type: object
       properties:
@@ -1985,12 +1147,12 @@ components:
     org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response:
       type: object
       properties:
-        totalPages:
-          type: integer
-          format: int32
         totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
         first:
           type: boolean
         last:
@@ -2014,37 +1176,6 @@ components:
           "$ref": "#/components/schemas/PageableObject"
         empty:
           type: boolean
-    com.ddang.usedauction.notification.dto.NotificationDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        memberId:
-          type: integer
-          format: int64
-        auctionId:
-          type: integer
-          format: int64
-        content:
-          type: string
-        notificationType:
-          type: string
-          enum:
-          - DONE
-          - DONE_INSTANT
-          - QUESTION
-          - ANSWER
-          - CONFIRM
-        createdAt:
-          type: string
-          format: date-time
-    org.springframework.web.servlet.mvc.method.annotation.SseEmitter:
-      type: object
-      properties:
-        timeout:
-          type: integer
-          format: int64
     com.ddang.usedauction.member.dto.MemberGetDto.Response:
       type: object
       properties:
@@ -2083,334 +1214,38 @@ components:
           format: date-time
           description: 회원 가입 날짜
           example: 1900-01-01 11:11
-    com.ddang.usedauction.auction.dto.AuctionGetForChatDto:
+    com.ddang.usedauction.category.dto.CategoryTreeDto.Response:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        title:
-          type: string
-        thumbnail:
-          type: string
-    com.ddang.usedauction.chat.domain.dto.ChatRoomCreateDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        seller:
-          "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetForChatDto"
-        buyer:
-          "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetForChatDto"
-        auction:
-          "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetForChatDto"
-        unReadCnt:
-          type: integer
-          format: int32
-        lastMessage:
-          type: string
-        lastMessageTime:
-          type: string
-          format: date-time
-    com.ddang.usedauction.member.dto.MemberGetForChatDto:
-      type: object
-      properties:
-        memberId:
-          type: string
-        social:
-          type: string
-    com.ddang.usedauction.chat.domain.dto.ChatMessageSendDto.Response:
-      type: object
-      properties:
-        roomId:
-          type: integer
-          format: int64
-        senderId:
-          type: string
-        message:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-    com.ddang.usedauction.category.dto.CategoryDto:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
+          description: 카테고리 pk
+          example: 1
         categoryName:
           type: string
-        imageUrl:
-          type: string
-        categories:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.ChildCategoryDto"
-        createdAt:
-          type: string
-          format: date-time
-    com.ddang.usedauction.category.dto.ChildCategoryDto:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        categoryName:
-          type: string
-        parentId:
-          type: integer
-          format: int64
-        createdAt:
-          type: string
-          format: date-time
-    com.ddang.usedauction.bid.dto.BidGetDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        bidPrice:
-          type: integer
-          format: int64
-        auctionId:
-          type: integer
-          format: int64
-        auctionTitle:
-          type: string
-        thumbnailImageUrl:
-          type: string
-        memberId:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-    org.springframework.data.domain.PageCom.ddang.usedauction.bid.dto.BidGetDto.Response:
-      type: object
-      properties:
-        totalPages:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        first:
-          type: boolean
-        last:
-          type: boolean
-        size:
-          type: integer
-          format: int32
-        content:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.bid.dto.BidGetDto.Response"
-        number:
-          type: integer
-          format: int32
-        sort:
-          "$ref": "#/components/schemas/SortObject"
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
-        empty:
-          type: boolean
-    com.ddang.usedauction.auction.dto.AuctionGetDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        auctionState:
-          type: string
-          enum:
-          - CONTINUE
-          - END
-        productName:
-          type: string
-        productColor:
-          type: string
-        productStatus:
-          type: number
-          format: double
-        productDescription:
-          type: string
-        receiveType:
-          type: string
-          enum:
-          - CONTACT
-          - DELIVERY
-          - ALL
-        contactPlace:
-          type: string
-        deliveryType:
-          type: string
-          enum:
-          - PREPAY
-          - NO_PREPAY
-          - NO_DELIVERY
-        deliveryPrice:
-          type: string
-        currentPrice:
-          type: integer
-          format: int64
-        startPrice:
-          type: integer
-          format: int64
-        instantPrice:
-          type: integer
-          format: int64
-        memberCount:
-          type: integer
-          format: int64
-        endedAt:
-          type: string
-          format: date-time
-        seller:
-          "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetDto.Response"
-        parentCategory:
-          "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
-        childCategory:
-          "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
-        bidList:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.bid.dto.BidGetDto.Response"
-        askList:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
-        imageList:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.image.dto.ImageGetDto.Response"
-        createdAt:
-          type: string
-          format: date-time
+          description: 카테고리 이름
+          example: 카테고리
+        child:
+          "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryTreeDto.Response"
+          description: 자식 카테고리 리스트, 비어있을 수 있습니다.
     com.ddang.usedauction.category.dto.CategoryGetDto.Response:
       type: object
       properties:
         id:
           type: integer
           format: int64
+          description: 카테고리 pk
+          example: 1
         categoryName:
           type: string
+          description: 카테고리 이름
+          example: 스포츠
         parentId:
           type: integer
           format: int64
-        createdAt:
-          type: string
-          format: date-time
-    org.springframework.data.domain.PageCom.ddang.usedauction.auction.dto.AuctionGetDto.Response:
-      type: object
-      properties:
-        totalPages:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        first:
-          type: boolean
-        last:
-          type: boolean
-        size:
-          type: integer
-          format: int32
-        content:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.auction.dto.AuctionGetDto.Response"
-        number:
-          type: integer
-          format: int32
-        sort:
-          "$ref": "#/components/schemas/SortObject"
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
-        empty:
-          type: boolean
-    com.ddang.usedauction.auction.dto.AuctionRecentDto:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        auctionTitle:
-          type: string
-        imageUrl:
-          type: string
-    org.springframework.data.domain.PageCom.ddang.usedauction.ask.dto.AskGetDto.Response:
-      type: object
-      properties:
-        totalPages:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        first:
-          type: boolean
-        last:
-          type: boolean
-        size:
-          type: integer
-          format: int32
-        content:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.ask.dto.AskGetDto.Response"
-        number:
-          type: integer
-          format: int32
-        sort:
-          "$ref": "#/components/schemas/SortObject"
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
-        empty:
-          type: boolean
-    org.springframework.data.domain.PageCom.ddang.usedauction.answer.dto.AnswerGetDto.Response:
-      type: object
-      properties:
-        totalPages:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        first:
-          type: boolean
-        last:
-          type: boolean
-        size:
-          type: integer
-          format: int32
-        content:
-          type: array
-          items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.answer.dto.AnswerGetDto.Response"
-        number:
-          type: integer
-          format: int32
-        sort:
-          "$ref": "#/components/schemas/SortObject"
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
-        empty:
-          type: boolean
+          description: 부모 카테고리 pk
+          example: 3
   securitySchemes:
     bearerAuth:
       type: http
