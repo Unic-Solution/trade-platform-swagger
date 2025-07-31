@@ -12,11 +12,179 @@ security:
 tags:
 - name: 소셜 로그인 API
   description: 소셜 로그인 관련 API 입니다.
+- name: 카테고리 API
+  description: 카테고리 관련 API 입니다.
 - name: 메일 API
   description: 메일 관련 API 입니다.
+- name: 좌석 API
+  description: 좌석과 관련된 API 입니다.
 - name: 회원 API
   description: 회원과 관련된 API입니다.
+- name: 티켓 API
+  description: 티켓 관련 API 입니다.
 paths:
+  "/api/tickets/concert/ticket":
+    post:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 생성 컨트롤러
+      description: 콘서트 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.
+      operationId: createConcertTicketController
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Request"
+        required: true
+      responses:
+        '201':
+          description: 티켓 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 없음
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/baseball/ticket":
+    post:
+      tags:
+      - 티켓 API
+      summary: 야구 티켓 생성 컨트롤러
+      description: 야구 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.
+      operationId: createBaseBallTicketController
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.BaseBallTicketCreateDto.Request"
+        required: true
+      responses:
+        '201':
+          description: 티켓 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 없음
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/seats/seat":
+    post:
+      tags:
+      - 좌석 API
+      summary: 좌석 생성 컨트롤러
+      description: 좌석을 생성합니다. 관리자 권한이 필요합니다.
+      operationId: createSeatController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatCreateDto.Request"
+        required: true
+      responses:
+        '201':
+          description: 좌석 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatCreateDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인 필요
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 필요
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
   "/api/payment/payment/ready":
     post:
       tags:
@@ -32,7 +200,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentReadyDto.Response"
   "/api/members/orders/create":
@@ -50,7 +218,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.order.dto.OrderCreateDto.Response"
   "/api/members/member/signup":
@@ -70,25 +238,27 @@ paths:
         '201':
           description: 회원가입 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberSignUpDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/members/member/logout":
@@ -102,31 +272,33 @@ paths:
         '200':
           description: 로그아웃 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '401':
           description: 로그인이 필요한 상태
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
       security:
@@ -148,25 +320,27 @@ paths:
         '200':
           description: 로그인 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/members/member/find-password":
@@ -187,25 +361,27 @@ paths:
         '200':
           description: 비밀번호 재발급 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
       security:
@@ -227,25 +403,27 @@ paths:
         '200':
           description: 아이디 찾기 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindIdDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
       security:
@@ -267,25 +445,27 @@ paths:
         '200':
           description: 사용 가능한 아이디
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/members/member/check-email":
@@ -305,25 +485,27 @@ paths:
         '200':
           description: 사용 가능한 이메일
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/mail/send-auth-mail":
@@ -343,25 +525,27 @@ paths:
         '200':
           description: 메일 전송 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailSendDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상치 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/mail/check-auth":
@@ -381,25 +565,27 @@ paths:
         '200':
           description: 인증번호 일치함
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상치 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/members/member/change-password":
@@ -419,31 +605,33 @@ paths:
         '200':
           description: 비밀번호 변경 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '401':
           description: 로그인이 필요한 상태
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
       security:
@@ -465,31 +653,267 @@ paths:
         '200':
           description: 이메일 변경 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangeEmailDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '401':
           description: 로그인이 필요한 상태
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/concert/{categoryId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 리스트 조회 컨트롤러
+      description: 콘서트 티켓 리스트를 페이지네이션하여 조회합니다.
+      operationId: getConcertTicketListController
+      parameters:
+      - name: categoryId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: 티켓 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.config.PageListDto"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/tickets/concert/ticket/{ticketId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 상세 조회 컨트롤러
+      description: 콘서트 티켓의 정보를 상세 조회합니다.
+      operationId: getConcertTicketController
+      parameters:
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: 티켓 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketGetDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/tickets/baseball/{categoryId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 야구 티켓 리스트 조회 컨트롤러
+      description: 야구 티켓 리스트를 페이지네이션하여 조회합니다.
+      operationId: getBaseBallTicketListController
+      parameters:
+      - name: categoryId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+      responses:
+        '200':
+          description: 티켓 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.config.PageListDto"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/tickets/baseball/ticket/{ticketId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 야구 티켓 상세 조회 컨트롤러
+      description: 야구 티켓의 정보를 상세 조회합니다.
+      operationId: getBaseBallTicketController
+      parameters:
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: 티켓 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketGetDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/seats/form-info":
+    get:
+      tags:
+      - 좌석 API
+      summary: 티켓 등록 시 좌석 정보 조회
+      description: 티켓 등록 시에 데이터에 들어갈 좌석 정보를 조회합니다.
+      operationId: getSeatFormInfoController
+      parameters:
+      - name: categoryId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: 좌석 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatFormInfoDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인 필요
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 필요
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
               schema:
                 type: string
       security:
@@ -503,7 +927,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentFailDto.Response"
   "/api/payment/payment/cancel":
@@ -515,7 +939,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentCancelDto.Response"
   "/api/payment/payment/approve":
@@ -538,7 +962,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentApproveDto.Response"
   "/api/oauth2/token":
@@ -559,25 +983,25 @@ paths:
         '200':
           description: 엑세스 토큰 발급 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Response"
         '400':
           description: 클라이언트 오류
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '404':
           description: 존재하지 않는 엔드포인트
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상치 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/members/points":
@@ -589,7 +1013,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.point.dto.PointBalanceDto.Response"
   "/api/members/points/history":
@@ -625,7 +1049,7 @@ paths:
         '200':
           description: OK
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response"
   "/api/members/member":
@@ -639,31 +1063,33 @@ paths:
         '200':
           description: 조회 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '401':
           description: 로그인이 필요한 상태
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
       security:
@@ -678,31 +1104,33 @@ paths:
         '200':
           description: 회원 탈퇴 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '401':
           description: 로그인이 필요한 상태
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
       security:
@@ -710,7 +1138,7 @@ paths:
   "/api/categories":
     get:
       tags:
-      - category-controller
+      - 카테고리 API
       summary: 카테고리 리스트 조회
       description: 카테고리 리스트를 조회합니다. 자식 카테고리까지 함께 조회하며 자식 카테고리는 비어있을 수 있습니다.
       operationId: getCategoriesController
@@ -718,7 +1146,7 @@ paths:
         '200':
           description: 카테고리 리스트 조회 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 type: array
                 items:
@@ -726,19 +1154,19 @@ paths:
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상치 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
   "/api/categories/category/{categoryId}":
     get:
       tags:
-      - category-controller
+      - 카테고리 API
       summary: 카테고리 상세 조회
       description: 특정 하나의 카테고리에 대하여 조회합니다.
       operationId: getCategoryController
@@ -754,29 +1182,204 @@ paths:
         '200':
           description: 카테고리 조회 성공
           content:
-            "*/*":
+            application/json:
               schema:
                 "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
         '400':
           description: 클라이언트 에러
           content:
-            "*/*":
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
         '500':
           description: 예상치 못한 서버 에러
           content:
-            "*/*":
+            application/json:
               schema:
                 type: string
 components:
   schemas:
+    com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Request:
+      type: object
+      properties:
+        ticketCount:
+          type: integer
+          format: int32
+          description: 티켓 수량
+          example: 1
+        ticketPerPrice:
+          type: integer
+          format: int64
+          description: 티켓 하나당 가격
+          example: 5000
+        isNextSeat:
+          type: string
+          description: 연석 여부
+          enum:
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+        tradeTypeList:
+          type: array
+          description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+          items:
+            type: string
+            enum:
+            - DELIVERY
+            - MEET
+        tradeDescription:
+          type: string
+          description: 거래 설명, 필수가 아닙니다.
+          example: description
+        seatGrade:
+          type: string
+          description: 좌석 등급
+          example: 등급
+          minLength: 1
+        seatFloor:
+          type: string
+          description: 좌석 층/위치
+          example: 위치
+          minLength: 1
+        seatZone:
+          type: string
+          description: 좌석 구역
+          example: 구역
+          minLength: 1
+        seatNo:
+          type: integer
+          format: int32
+          description: 좌석 열
+          example: 1
+        eventDateTime:
+          type: string
+          format: date-time
+          description: 콘서트 날짜
+          example: 2025-01-11 11:11
+        categoryId:
+          type: integer
+          format: int64
+          description: 카테고리 pk, 가장 최하위 카테고리입니다.
+          example: 1
+      required:
+      - categoryId
+      - eventDateTime
+      - seatFloor
+      - seatGrade
+      - seatZone
+    com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Response:
+      type: object
+      properties:
+        ConcertTicketId:
+          type: integer
+          format: int64
+          description: 생성된 콘서트 티켓 pk
+          example: 1
+    com.ddang.usedauction.ticket.dto.BaseBallTicketCreateDto.Request:
+      type: object
+      properties:
+        ticketCount:
+          type: integer
+          format: int32
+          description: 티켓 수량
+          example: 1
+        ticketPerPrice:
+          type: integer
+          format: int64
+          description: 티켓 하나당 가격
+          example: 5000
+        isNextSeat:
+          type: string
+          description: 연석 여부
+          enum:
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+        tradeTypeList:
+          type: array
+          description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+          items:
+            type: string
+            enum:
+            - DELIVERY
+            - MEET
+        tradeDescription:
+          type: string
+          description: 거래 설명, 필수가 아닙니다.
+          example: description
+        seatFloor:
+          type: string
+          description: 좌석 층/위치
+          example: 위치
+          minLength: 1
+        seatNo:
+          type: integer
+          format: int32
+          description: 좌석 열
+          example: 1
+        seatAway:
+          type: string
+          description: 좌석 상대팀
+          example: VS 두산
+          minLength: 1
+        seatZone:
+          type: string
+          description: 좌석 존
+          example: A
+          minLength: 1
+        eventDateTime:
+          type: string
+          format: date-time
+          description: 경기 날짜
+          example: 2025-01-11 11:11
+        categoryId:
+          type: integer
+          format: int64
+          description: 카테고리 pk, 가장 최하위 카테고리입니다.
+          example: 1
+      required:
+      - categoryId
+      - eventDateTime
+      - seatAway
+      - seatFloor
+      - seatZone
+    com.ddang.usedauction.seat.dto.SeatCreateDto.Response:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 생성된 좌석 이름
+          example: 좌석
+    com.ddang.usedauction.seat.dto.SeatCreateDto.Request:
+      type: object
+      properties:
+        seatName:
+          type: string
+          description: 좌석 이름
+          example: 좌석
+          minLength: 1
+        categoryId:
+          type: integer
+          format: int64
+          description: 카테고리 pk, 대분류 카테고리를 등록합니다.
+          example: 1
+        seatType:
+          type: string
+          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
+          enum:
+          - GRADE
+          - FLOOR
+          - AWAY
+          - ZONE
+      required:
+      - categoryId
+      - seatName
     com.ddang.usedauction.payment.dto.PaymentInfoDto.Request:
       type: object
       properties:
@@ -1025,6 +1628,176 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
+    com.ddang.usedauction.config.PageListDto:
+      type: object
+      properties:
+        totalPage:
+          type: integer
+          format: int32
+          description: 전체 페이지 수
+          example: 10
+        totalElements:
+          type: integer
+          format: int64
+          description: 전체 데이터 수
+          example: 310
+        curPageNumber:
+          type: integer
+          format: int32
+          description: 현재 페이지, 0부터 시작합니다.
+          example: 0
+        curPageSize:
+          type: integer
+          format: int32
+          description: 현재 페이지에 표시된 데이터 수
+          example: 10
+        content:
+          type: array
+          description: 현재 페이지의 데이터
+          items: {}
+        first:
+          type: boolean
+        last:
+          type: boolean
+    org.springdoc.core.converters.models.Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
+          items:
+            type: string
+    com.ddang.usedauction.event.dto.ConcertEventGetDto.Response:
+      type: object
+      description: 이벤트 정보
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 콘서트 이벤트 pk
+          example: 1
+        name:
+          type: string
+          description: 콘서트 이름
+          example: 콘서트
+        eventDateTime:
+          type: string
+          format: date-time
+          description: 콘서트 날짜
+    com.ddang.usedauction.ticket.dto.ConcertTicketGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 티켓 pk
+          example: 1
+        categoryDepth1:
+          type: string
+          description: 대분류 카테고리
+          example: 카테고리1
+        categoryDepth2:
+          type: string
+          description: 중간 카테고리
+          example: 카테고리2
+        categoryDepth3:
+          type: string
+          description: 세부 카테고리
+          example: 카테고리3
+        count:
+          type: integer
+          format: int32
+          description: 티켓 수
+          example: 1
+        perPrice:
+          type: integer
+          format: int64
+          description: 티켓 하나당 가격
+          example: 5000
+        isNextSeat:
+          type: string
+          description: 연석 여부
+          enum:
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+        tradeTypeList:
+          type: array
+          description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+          items:
+            type: string
+            enum:
+            - DELIVERY
+            - MEET
+        tradeDescription:
+          type: string
+          description: 거래 설명
+          example: 거래 설명
+        concertEvent:
+          "$ref": "#/components/schemas/com.ddang.usedauction.event.dto.ConcertEventGetDto.Response"
+          description: 이벤트 정보
+        seatFloor:
+          type: string
+          description: 좌석 층/위치 정보
+          example: 1F
+        seatZone:
+          type: string
+          description: 좌석 구역 정보
+          example: 구역
+        seatNo:
+          type: integer
+          format: int32
+          description: 좌석 열 정보
+          example: 3
+    com.ddang.usedauction.seat.dto.SeatGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 좌석 pk
+          example: 1
+        seatName:
+          type: string
+          description: 좌석 이름
+          example: 좌석
+        seatType:
+          type: string
+          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
+          enum:
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+    com.ddang.usedauction.seat.dto.SeatFormInfoDto.Response:
+      type: object
+      properties:
+        seatGradeList:
+          type: array
+          description: 좌석 등급 정보
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
+        seatFloorList:
+          type: array
+          description: 좌석 위치/층 정보
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
+        seatZoneList:
+          type: array
+          description: 좌석 구역 정보
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
+        seatAwayList:
+          type: array
+          description: 좌석 상대팀 정보
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
     com.ddang.usedauction.payment.dto.PaymentFailDto.Response:
       type: object
       properties:
@@ -1078,21 +1851,6 @@ components:
         pointAmount:
           type: integer
           format: int64
-    org.springdoc.core.converters.models.Pageable:
-      type: object
-      properties:
-        page:
-          type: integer
-          format: int32
-          minimum: 0
-        size:
-          type: integer
-          format: int32
-          minimum: 1
-        sort:
-          type: array
-          items:
-            type: string
     PageableObject:
       type: object
       properties:
@@ -1101,16 +1859,16 @@ components:
           format: int64
         sort:
           "$ref": "#/components/schemas/SortObject"
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
         pageNumber:
           type: integer
           format: int32
         pageSize:
           type: integer
           format: int32
-        paged:
-          type: boolean
-        unpaged:
-          type: boolean
     SortObject:
       type: object
       properties:
@@ -1169,11 +1927,11 @@ components:
           format: int32
         sort:
           "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
         empty:
           type: boolean
     com.ddang.usedauction.member.dto.MemberGetDto.Response:
@@ -1213,22 +1971,6 @@ components:
           type: string
           format: date-time
           description: 회원 가입 날짜
-          example: 1900-01-01 11:11
-    com.ddang.usedauction.category.dto.CategoryTreeDto.Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: 카테고리 pk
-          example: 1
-        categoryName:
-          type: string
-          description: 카테고리 이름
-          example: 카테고리
-        child:
-          "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryTreeDto.Response"
-          description: 자식 카테고리 리스트, 비어있을 수 있습니다.
     com.ddang.usedauction.category.dto.CategoryGetDto.Response:
       type: object
       properties:
@@ -1246,6 +1988,23 @@ components:
           format: int64
           description: 부모 카테고리 pk
           example: 3
+    com.ddang.usedauction.category.dto.CategoryTreeDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 카테고리 pk
+          example: 1
+        categoryName:
+          type: string
+          description: 카테고리 이름
+          example: 카테고리
+        child:
+          type: array
+          description: 자식 카테고리 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
   securitySchemes:
     bearerAuth:
       type: http
