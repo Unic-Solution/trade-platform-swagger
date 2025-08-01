@@ -23,26 +23,28 @@ tags:
 - name: 티켓 API
   description: 티켓 관련 API 입니다.
 paths:
-  "/api/tickets/concert/ticket":
+  "/api/tickets/ticket/purchase/{ticketId}":
     post:
       tags:
       - 티켓 API
-      summary: 콘서트 티켓 생성 컨트롤러
-      description: 콘서트 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.
-      operationId: createConcertTicketController
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Request"
+      summary: 티켓 구매 컨트롤러
+      description: 티켓을 구매합니다.
+      operationId: purchaseTicketController
+      parameters:
+      - name: ticketId
+        in: path
         required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
       responses:
-        '201':
-          description: 티켓 생성 성공
+        '200':
+          description: 티켓 구매 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketPurchaseDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -57,8 +59,50 @@ paths:
             application/json:
               schema:
                 type: string
-        '403':
-          description: 권한 없음
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/concert/ticket":
+    post:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 생성 컨트롤러
+      description: 콘서트 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.
+      operationId: createConcertTicketController
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Request"
+        required: true
+      responses:
+        '201':
+          description: 티켓 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
           content:
             application/json:
               schema:
@@ -88,7 +132,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.BaseBallTicketCreateDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto.Request"
         required: true
       responses:
         '201':
@@ -96,7 +140,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -107,12 +151,6 @@ paths:
                   type: string
         '401':
           description: 비로그인 상태
-          content:
-            application/json:
-              schema:
-                type: string
-        '403':
-          description: 권한 없음
           content:
             application/json:
               schema:
@@ -142,7 +180,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatCreateDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto.Request"
         required: true
       responses:
         '201':
@@ -150,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -194,7 +232,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentInfoDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentInfoDto.Request"
         required: true
       responses:
         '200':
@@ -202,7 +240,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentReadyDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentReadyDto.Response"
   "/api/members/orders/create":
     post:
       tags:
@@ -212,7 +250,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.order.dto.OrderCreateDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto.Request"
         required: true
       responses:
         '200':
@@ -220,7 +258,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.order.dto.OrderCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto.Response"
   "/api/members/member/signup":
     post:
       tags:
@@ -232,7 +270,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberSignUpDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto.Request"
         required: true
       responses:
         '201':
@@ -240,7 +278,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberSignUpDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -314,7 +352,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto.Request"
         required: true
       responses:
         '200':
@@ -322,7 +360,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -355,7 +393,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindPasswordDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindPasswordDto.Request"
         required: true
       responses:
         '200':
@@ -397,7 +435,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindIdDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto.Request"
         required: true
       responses:
         '200':
@@ -405,7 +443,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberFindIdDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -439,7 +477,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberCheckIdDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckIdDto.Request"
         required: true
       responses:
         '200':
@@ -479,7 +517,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberCheckEmailDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckEmailDto.Request"
         required: true
       responses:
         '200':
@@ -519,7 +557,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailSendDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto.Request"
         required: true
       responses:
         '200':
@@ -527,7 +565,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailSendDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -559,7 +597,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailAuthCheckDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Request"
         required: true
       responses:
         '200':
@@ -567,7 +605,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -599,7 +637,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangePasswordDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangePasswordDto.Request"
         required: true
       responses:
         '200':
@@ -647,7 +685,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangeEmailDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Request"
         required: true
       responses:
         '200':
@@ -655,7 +693,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberChangeEmailDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -710,7 +748,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.config.PageListDto"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
         '400':
           description: 클라이언트 에러
           content:
@@ -752,7 +790,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -799,7 +837,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.config.PageListDto"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
         '400':
           description: 클라이언트 에러
           content:
@@ -841,7 +879,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.ticket.dto.ConcertTicketGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -883,7 +921,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatFormInfoDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatFormInfoDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -929,7 +967,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentFailDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentFailDto.Response"
   "/api/payment/payment/cancel":
     get:
       tags:
@@ -941,7 +979,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentCancelDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentCancelDto.Response"
   "/api/payment/payment/approve":
     get:
       tags:
@@ -964,7 +1002,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.PaymentApproveDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentApproveDto.Response"
   "/api/oauth2/token":
     get:
       tags:
@@ -985,7 +1023,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberLoginDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto.Response"
         '400':
           description: 클라이언트 오류
           content:
@@ -1015,7 +1053,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.point.dto.PointBalanceDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.point.dto.PointBalanceDto.Response"
   "/api/members/points/history":
     get:
       tags:
@@ -1051,7 +1089,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response"
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto.Response"
   "/api/members/member":
     get:
       tags:
@@ -1065,7 +1103,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.member.dto.MemberGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberGetDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -1150,7 +1188,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryTreeDto.Response"
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto.Response"
         '404':
           description: 존재하지 않는 엔드포인트 호출
           content:
@@ -1184,7 +1222,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto.Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -1207,9 +1245,21 @@ paths:
                 type: string
 components:
   schemas:
-    com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Request:
+    com.unicsolution.ttp.ticket.dto.TicketPurchaseDto.Response:
       type: object
       properties:
+        ticketId:
+          type: integer
+          format: int64
+          description: 티켓 pk
+          example: 1
+    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Request:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 티켓 이름, 기타 카테고리를 위한 컬럼입니다. 그 외의 경우 필수값이 아닙니다. 20자 내로 작성해야 합니다.
+          example: 티켓
         ticketCount:
           type: integer
           format: int32
@@ -1274,17 +1324,21 @@ components:
       - seatFloor
       - seatGrade
       - seatZone
-    com.ddang.usedauction.ticket.dto.ConcertTicketCreateDto.Response:
+    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Response:
       type: object
       properties:
-        ConcertTicketId:
+        concertTicketId:
           type: integer
           format: int64
           description: 생성된 콘서트 티켓 pk
           example: 1
-    com.ddang.usedauction.ticket.dto.BaseBallTicketCreateDto.Request:
+    com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto.Request:
       type: object
       properties:
+        name:
+          type: string
+          description: 티켓 이름, 기타 카테고리를 위한 컬럼입니다. 그 외의 경우 필수값이 아닙니다. 20자 내로 작성해야 합니다.
+          example: 티켓
         ticketCount:
           type: integer
           format: int32
@@ -1349,14 +1403,14 @@ components:
       - seatAway
       - seatFloor
       - seatZone
-    com.ddang.usedauction.seat.dto.SeatCreateDto.Response:
+    com.unicsolution.ttp.seat.dto.SeatCreateDto.Response:
       type: object
       properties:
         name:
           type: string
           description: 생성된 좌석 이름
           example: 좌석
-    com.ddang.usedauction.seat.dto.SeatCreateDto.Request:
+    com.unicsolution.ttp.seat.dto.SeatCreateDto.Request:
       type: object
       properties:
         seatName:
@@ -1380,7 +1434,7 @@ components:
       required:
       - categoryId
       - seatName
-    com.ddang.usedauction.payment.dto.PaymentInfoDto.Request:
+    com.unicsolution.ttp.payment.dto.PaymentInfoDto.Request:
       type: object
       properties:
         orderId:
@@ -1396,7 +1450,7 @@ components:
       required:
       - memberId
       - orderId
-    com.ddang.usedauction.payment.dto.PaymentReadyDto.Response:
+    com.unicsolution.ttp.payment.dto.PaymentReadyDto.Response:
       type: object
       properties:
         tid:
@@ -1406,13 +1460,13 @@ components:
         created_at:
           type: string
           format: date-time
-    com.ddang.usedauction.order.dto.OrderCreateDto.Request:
+    com.unicsolution.ttp.order.dto.OrderCreateDto.Request:
       type: object
       properties:
         price:
           type: integer
           format: int32
-    com.ddang.usedauction.order.dto.OrderCreateDto.Response:
+    com.unicsolution.ttp.order.dto.OrderCreateDto.Response:
       type: object
       properties:
         orderId:
@@ -1421,14 +1475,14 @@ components:
         memberId:
           type: integer
           format: int64
-    com.ddang.usedauction.member.dto.MemberSignUpDto.Response:
+    com.unicsolution.ttp.member.dto.MemberSignUpDto.Response:
       type: object
       properties:
         memberId:
           type: string
           description: 회원가입된 아이디
           example: test
-    com.ddang.usedauction.member.dto.MemberSignUpDto.Request:
+    com.unicsolution.ttp.member.dto.MemberSignUpDto.Request:
       type: object
       properties:
         memberId:
@@ -1459,7 +1513,7 @@ components:
       - email
       - memberId
       - password
-    com.ddang.usedauction.member.dto.MemberLoginDto.Response:
+    com.unicsolution.ttp.member.dto.MemberLoginDto.Response:
       type: object
       properties:
         accessToken:
@@ -1470,7 +1524,7 @@ components:
           type: string
           description: 회원 아이디
           example: test
-    com.ddang.usedauction.member.dto.MemberLoginDto.Request:
+    com.unicsolution.ttp.member.dto.MemberLoginDto.Request:
       type: object
       properties:
         memberId:
@@ -1486,7 +1540,7 @@ components:
       required:
       - memberId
       - password
-    com.ddang.usedauction.member.dto.MemberFindPasswordDto.Request:
+    com.unicsolution.ttp.member.dto.MemberFindPasswordDto.Request:
       type: object
       properties:
         memberId:
@@ -1503,14 +1557,14 @@ components:
       required:
       - email
       - memberId
-    com.ddang.usedauction.member.dto.MemberFindIdDto.Response:
+    com.unicsolution.ttp.member.dto.MemberFindIdDto.Response:
       type: object
       properties:
         memberId:
           type: string
           description: 조회된 회원 아이디
           example: test
-    com.ddang.usedauction.member.dto.MemberFindIdDto.Request:
+    com.unicsolution.ttp.member.dto.MemberFindIdDto.Request:
       type: object
       properties:
         email:
@@ -1521,7 +1575,7 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
-    com.ddang.usedauction.member.dto.MemberCheckIdDto.Request:
+    com.unicsolution.ttp.member.dto.MemberCheckIdDto.Request:
       type: object
       properties:
         memberId:
@@ -1532,7 +1586,7 @@ components:
           pattern: "^[a-z0-9]{6,12}$"
       required:
       - memberId
-    com.ddang.usedauction.member.dto.MemberCheckEmailDto.Request:
+    com.unicsolution.ttp.member.dto.MemberCheckEmailDto.Request:
       type: object
       properties:
         email:
@@ -1543,14 +1597,14 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
-    com.ddang.usedauction.mail.dto.MailSendDto.Response:
+    com.unicsolution.ttp.mail.dto.MailSendDto.Response:
       type: object
       properties:
         email:
           type: string
           description: 전송 받을 이메일 주소
           example: test@naver.com
-    com.ddang.usedauction.mail.dto.MailSendDto.Request:
+    com.unicsolution.ttp.mail.dto.MailSendDto.Request:
       type: object
       properties:
         email:
@@ -1561,14 +1615,14 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
-    com.ddang.usedauction.mail.dto.MailAuthCheckDto.Response:
+    com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Response:
       type: object
       properties:
         email:
           type: string
           description: 인증된 이메일 주소
           example: test@naver.com
-    com.ddang.usedauction.mail.dto.MailAuthCheckDto.Request:
+    com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Request:
       type: object
       properties:
         email:
@@ -1586,7 +1640,7 @@ components:
       required:
       - authNum
       - email
-    com.ddang.usedauction.member.dto.MemberChangePasswordDto.Request:
+    com.unicsolution.ttp.member.dto.MemberChangePasswordDto.Request:
       type: object
       properties:
         curPassword:
@@ -1610,14 +1664,14 @@ components:
       - confirmPassword
       - curPassword
       - newPassword
-    com.ddang.usedauction.member.dto.MemberChangeEmailDto.Response:
+    com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Response:
       type: object
       properties:
         email:
           type: string
           description: 변경된 이메일 주소
           example: test@naver.com
-    com.ddang.usedauction.member.dto.MemberChangeEmailDto.Request:
+    com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Request:
       type: object
       properties:
         email:
@@ -1628,7 +1682,7 @@ components:
           pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
       required:
       - email
-    com.ddang.usedauction.config.PageListDto:
+    com.unicsolution.ttp.config.PageListDto:
       type: object
       properties:
         totalPage:
@@ -1674,7 +1728,7 @@ components:
           type: array
           items:
             type: string
-    com.ddang.usedauction.event.dto.ConcertEventGetDto.Response:
+    com.unicsolution.ttp.event.dto.ConcertEventGetDto.Response:
       type: object
       description: 이벤트 정보
       properties:
@@ -1691,7 +1745,23 @@ components:
           type: string
           format: date-time
           description: 콘서트 날짜
-    com.ddang.usedauction.ticket.dto.ConcertTicketGetDto.Response:
+    com.unicsolution.ttp.image.dto.ImageGetDto.Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 이미지 pk
+          example: 1
+        imageUrl:
+          type: string
+          description: 이미지 url
+          example: https://example
+        imageName:
+          type: string
+          description: 이미지 이름
+          example: 이미지
+    com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto.Response:
       type: object
       properties:
         id:
@@ -1699,6 +1769,10 @@ components:
           format: int64
           description: 티켓 pk
           example: 1
+        name:
+          type: string
+          description: 티켓 이름, 기타 카테고리에서만 사용할 필드입니다.
+          example: 티켓
         categoryDepth1:
           type: string
           description: 대분류 카테고리
@@ -1740,7 +1814,7 @@ components:
           description: 거래 설명
           example: 거래 설명
         concertEvent:
-          "$ref": "#/components/schemas/com.ddang.usedauction.event.dto.ConcertEventGetDto.Response"
+          "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.ConcertEventGetDto.Response"
           description: 이벤트 정보
         seatFloor:
           type: string
@@ -1755,7 +1829,16 @@ components:
           format: int32
           description: 좌석 열 정보
           example: 3
-    com.ddang.usedauction.seat.dto.SeatGetDto.Response:
+        imageList:
+          type: array
+          description: 이미지 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.image.dto.ImageGetDto.Response"
+        createdAt:
+          type: string
+          format: date-time
+          description: 생성 날짜
+    com.unicsolution.ttp.seat.dto.SeatGetDto.Response:
       type: object
       properties:
         id:
@@ -1775,40 +1858,40 @@ components:
           - FLOOR
           - ZONE
           - AWAY
-    com.ddang.usedauction.seat.dto.SeatFormInfoDto.Response:
+    com.unicsolution.ttp.seat.dto.SeatFormInfoDto.Response:
       type: object
       properties:
         seatGradeList:
           type: array
           description: 좌석 등급 정보
           items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
         seatFloorList:
           type: array
           description: 좌석 위치/층 정보
           items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
         seatZoneList:
           type: array
           description: 좌석 구역 정보
           items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
         seatAwayList:
           type: array
           description: 좌석 상대팀 정보
           items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.seat.dto.SeatGetDto.Response"
-    com.ddang.usedauction.payment.dto.PaymentFailDto.Response:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
+    com.unicsolution.ttp.payment.dto.PaymentFailDto.Response:
       type: object
       properties:
         message:
           type: string
-    com.ddang.usedauction.payment.dto.PaymentCancelDto.Response:
+    com.unicsolution.ttp.payment.dto.PaymentCancelDto.Response:
       type: object
       properties:
         message:
           type: string
-    com.ddang.usedauction.payment.dto.Amount:
+    com.unicsolution.ttp.payment.dto.Amount:
       type: object
       properties:
         total:
@@ -1817,7 +1900,7 @@ components:
         tax_free:
           type: integer
           format: int32
-    com.ddang.usedauction.payment.dto.PaymentApproveDto.Response:
+    com.unicsolution.ttp.payment.dto.PaymentApproveDto.Response:
       type: object
       properties:
         aid:
@@ -1833,7 +1916,7 @@ components:
         payment_method_type:
           type: string
         amount:
-          "$ref": "#/components/schemas/com.ddang.usedauction.payment.dto.Amount"
+          "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.Amount"
         item_name:
           type: string
         quantity:
@@ -1845,7 +1928,7 @@ components:
         approved_at:
           type: string
           format: date-time
-    com.ddang.usedauction.point.dto.PointBalanceDto.Response:
+    com.unicsolution.ttp.point.dto.PointBalanceDto.Response:
       type: object
       properties:
         pointAmount:
@@ -1859,16 +1942,16 @@ components:
           format: int64
         sort:
           "$ref": "#/components/schemas/SortObject"
-        paged:
-          type: boolean
-        unpaged:
-          type: boolean
         pageNumber:
           type: integer
           format: int32
         pageSize:
           type: integer
           format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
     SortObject:
       type: object
       properties:
@@ -1878,7 +1961,7 @@ components:
           type: boolean
         unsorted:
           type: boolean
-    com.ddang.usedauction.point.dto.PointHistoryDto.Response:
+    com.unicsolution.ttp.point.dto.PointHistoryDto.Response:
       type: object
       properties:
         id:
@@ -1902,7 +1985,7 @@ components:
         createdAt:
           type: string
           format: date-time
-    org.springframework.data.domain.PageCom.ddang.usedauction.point.dto.PointHistoryDto.Response:
+    org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto.Response:
       type: object
       properties:
         totalElements:
@@ -1921,20 +2004,20 @@ components:
         content:
           type: array
           items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.point.dto.PointHistoryDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.point.dto.PointHistoryDto.Response"
         number:
           type: integer
           format: int32
         sort:
           "$ref": "#/components/schemas/SortObject"
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
         numberOfElements:
           type: integer
           format: int32
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
         empty:
           type: boolean
-    com.ddang.usedauction.member.dto.MemberGetDto.Response:
+    com.unicsolution.ttp.member.dto.MemberGetDto.Response:
       type: object
       properties:
         id:
@@ -1971,7 +2054,7 @@ components:
           type: string
           format: date-time
           description: 회원 가입 날짜
-    com.ddang.usedauction.category.dto.CategoryGetDto.Response:
+    com.unicsolution.ttp.category.dto.CategoryGetDto.Response:
       type: object
       properties:
         id:
@@ -1988,7 +2071,7 @@ components:
           format: int64
           description: 부모 카테고리 pk
           example: 3
-    com.ddang.usedauction.category.dto.CategoryTreeDto.Response:
+    com.unicsolution.ttp.category.dto.CategoryTreeDto.Response:
       type: object
       properties:
         id:
@@ -2004,7 +2087,7 @@ components:
           type: array
           description: 자식 카테고리 리스트, 비어있을 수 있습니다.
           items:
-            "$ref": "#/components/schemas/com.ddang.usedauction.category.dto.CategoryGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto.Response"
   securitySchemes:
     bearerAuth:
       type: http
