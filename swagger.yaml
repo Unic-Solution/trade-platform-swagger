@@ -422,8 +422,6 @@ paths:
             application/json:
               schema:
                 type: string
-      security:
-      - bearerAuth: []
   "/api/members/member/find-id":
     post:
       tags:
@@ -464,8 +462,6 @@ paths:
             application/json:
               schema:
                 type: string
-      security:
-      - bearerAuth: []
   "/api/members/member/check-id":
     post:
       tags:
@@ -2010,11 +2006,11 @@ components:
           format: int32
         sort:
           "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
         empty:
           type: boolean
     com.unicsolution.ttp.member.dto.MemberGetDto.Response:
