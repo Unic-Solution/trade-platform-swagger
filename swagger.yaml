@@ -1,5 +1,5 @@
 ---
-openapi: 3.1.0
+openapi: 3.0.1
 info:
   title: 티켓 거래 플랫폼 API Document
   description: 티켓 거래 플랫폼의 서버 api 명세서
@@ -33,18 +33,19 @@ paths:
       parameters:
       - name: ticketId
         in: path
+        description: 티켓 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
+        example: 1
       responses:
         '200':
           description: 티켓 구매 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketPurchaseDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -84,15 +85,25 @@ paths:
         content:
           multipart/form-data:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Request"
-        required: true
+              required:
+              - request
+              type: object
+              properties:
+                imageList:
+                  type: array
+                  description: 이미지 리스트, 필수는 아닙니다.
+                  items:
+                    type: string
+                    format: binary
+                request:
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Request"
       responses:
         '201':
           description: 티켓 생성 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -132,15 +143,25 @@ paths:
         content:
           multipart/form-data:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto.Request"
-        required: true
+              required:
+              - request
+              type: object
+              properties:
+                imageList:
+                  type: array
+                  description: 이미지 리스트, 필수는 아닙니다.
+                  items:
+                    type: string
+                    format: binary
+                request:
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request"
       responses:
         '201':
           description: 티켓 생성 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -180,7 +201,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Request"
         required: true
       responses:
         '201':
@@ -188,7 +209,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -232,7 +253,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentInfoDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentInfoDto$Request"
         required: true
       responses:
         '200':
@@ -240,7 +261,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentReadyDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentReadyDto$Response"
   "/api/members/orders/create":
     post:
       tags:
@@ -250,7 +271,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Request"
         required: true
       responses:
         '200':
@@ -258,7 +279,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Response"
   "/api/members/member/signup":
     post:
       tags:
@@ -270,7 +291,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto$Request"
         required: true
       responses:
         '201':
@@ -278,7 +299,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -352,7 +373,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Request"
         required: true
       responses:
         '200':
@@ -360,7 +381,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -393,7 +414,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindPasswordDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindPasswordDto$Request"
         required: true
       responses:
         '200':
@@ -433,7 +454,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto$Request"
         required: true
       responses:
         '200':
@@ -441,7 +462,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -473,7 +494,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckIdDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckIdDto$Request"
         required: true
       responses:
         '200':
@@ -513,7 +534,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckEmailDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckEmailDto$Request"
         required: true
       responses:
         '200':
@@ -553,7 +574,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto$Request"
         required: true
       responses:
         '200':
@@ -561,7 +582,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -593,7 +614,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Request"
         required: true
       responses:
         '200':
@@ -601,7 +622,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -633,7 +654,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangePasswordDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request"
         required: true
       responses:
         '200':
@@ -681,7 +702,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Request"
         required: true
       responses:
         '200':
@@ -689,7 +710,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -728,18 +749,19 @@ paths:
       parameters:
       - name: categoryId
         in: path
+        description: 최하위 카테고리 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
+        example: 1
       responses:
         '200':
           description: 등록 필드 정보 조회 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketFormDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketFormDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -778,16 +800,20 @@ paths:
       parameters:
       - name: categoryId
         in: path
+        description: 최하위 카테고리 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
-      - name: pageable
+        example: 1
+      - name: page
         in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+        description: 표시할 페이지, 0부터 시작합니다, 기본값 = 0
+        example: 0
+      - name: size
+        in: query
+        description: 페이지에 표시할 데이터 수, 기본값 = 10
+        example: 10
       responses:
         '200':
           description: 티켓 리스트 조회 성공
@@ -825,18 +851,19 @@ paths:
       parameters:
       - name: ticketId
         in: path
+        description: 티켓 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
+        example: 1
       responses:
         '200':
           description: 티켓 조회 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -867,16 +894,20 @@ paths:
       parameters:
       - name: categoryId
         in: path
+        description: 최하위 카테고리 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
-      - name: pageable
+        example: 1
+      - name: page
         in: query
-        required: true
-        schema:
-          "$ref": "#/components/schemas/org.springdoc.core.converters.models.Pageable"
+        description: 표시할 페이지, 0부터 시작합니다, 기본값 = 0
+        example: 0
+      - name: size
+        in: query
+        description: 페이지에 표시할 데이터 수, 기본값 = 10
+        example: 10
       responses:
         '200':
           description: 티켓 리스트 조회 성공
@@ -914,18 +945,19 @@ paths:
       parameters:
       - name: ticketId
         in: path
+        description: 티켓 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
+        example: 1
       responses:
         '200':
           description: 티켓 조회 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -957,7 +989,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentFailDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentFailDto$Response"
   "/api/payment/payment/cancel":
     get:
       tags:
@@ -969,7 +1001,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentCancelDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentCancelDto$Response"
   "/api/payment/payment/approve":
     get:
       tags:
@@ -992,7 +1024,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentApproveDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentApproveDto$Response"
   "/api/oauth2/token":
     get:
       tags:
@@ -1003,17 +1035,19 @@ paths:
       parameters:
       - name: code
         in: query
+        description: 서버로부터 받은 암호화된 코드
         required: true
-        schema:
-          type: string
-          minLength: 1
+        content:
+          "*/*":
+            schema:
+              type: string
       responses:
         '200':
           description: 엑세스 토큰 발급 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Response"
         '400':
           description: 클라이언트 오류
           content:
@@ -1043,7 +1077,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.point.dto.PointBalanceDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.point.dto.PointBalanceDto$Response"
   "/api/members/points/history":
     get:
       tags:
@@ -1079,7 +1113,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto.Response"
+                "$ref": "#/components/schemas/org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto$Response"
   "/api/members/member":
     get:
       tags:
@@ -1093,7 +1127,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberGetDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -1163,56 +1197,29 @@ paths:
                 type: string
       security:
       - bearerAuth: []
-  "/api/categories":
+  "/api/categories/tree/{categoryId}":
     get:
       tags:
       - 카테고리 API
-      summary: 카테고리 리스트 조회
-      description: 카테고리 리스트를 조회합니다. 자식 카테고리까지 함께 조회하며 자식 카테고리는 비어있을 수 있습니다.
-      operationId: getCategoriesController
-      responses:
-        '200':
-          description: 카테고리 리스트 조회 성공
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto.Response"
-        '404':
-          description: 존재하지 않는 엔드포인트 호출
-          content:
-            application/json:
-              schema:
-                type: string
-        '500':
-          description: 예상치 못한 서버 에러
-          content:
-            application/json:
-              schema:
-                type: string
-  "/api/categories/category/{categoryId}":
-    get:
-      tags:
-      - 카테고리 API
-      summary: 카테고리 상세 조회
-      description: 특정 하나의 카테고리에 대하여 조회합니다.
+      summary: 카테고리에 대한 정보와 자식 카테고리 리스트를 함께 조회
+      description: 카테고리 정보와 자식 리스트까지 함께 조회합니다. 자식 리스트는 비어있을 수 있습니다.
       operationId: getCategoryController
       parameters:
       - name: categoryId
         in: path
+        description: 카테고리 pk
         required: true
         schema:
           type: integer
           format: int64
-          exclusiveMinimum: 0
+        example: 1
       responses:
         '200':
-          description: 카테고리 조회 성공
+          description: 카테고리 정보 조회 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto.Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -1222,28 +1229,77 @@ paths:
                 items:
                   type: string
         '404':
-          description: 존재하지 않는 엔드포인트 호출
+          description: 존재하지 않는 엔드포인트
           content:
             application/json:
               schema:
                 type: string
         '500':
-          description: 예상치 못한 서버 에러
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/categories/parent":
+    get:
+      tags:
+      - 카테고리 API
+      summary: 대분류 카테고리 리스트 조회
+      description: 대분류 카테고리 리스트를 조회합니다.
+      operationId: getParentCategoryList
+      responses:
+        '200':
+          description: 대분류 카테고리 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
           content:
             application/json:
               schema:
                 type: string
 components:
   schemas:
-    com.unicsolution.ttp.ticket.dto.TicketPurchaseDto.Response:
+    com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response:
       type: object
       properties:
         ticketId:
           type: integer
-          format: int64
           description: 티켓 pk
+          format: int64
           example: 1
-    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Request:
+    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response:
+      type: object
+      properties:
+        concertTicketId:
+          type: integer
+          description: 생성된 콘서트 티켓 pk
+          format: int64
+          example: 1
+    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Request:
+      required:
+      - categoryId
+      - seatFloor
+      - seatGrade
+      - seatZone
       type: object
       properties:
         name:
@@ -1252,13 +1308,13 @@ components:
           example: 티켓
         ticketCount:
           type: integer
-          format: int32
           description: 티켓 수량
+          format: int32
           example: 1
         ticketPerPrice:
           type: integer
-          format: int64
           description: 티켓 하나당 가격
+          format: int64
           example: 5000
         isNextSeat:
           type: string
@@ -1266,11 +1322,14 @@ components:
           enum:
           - NOT_NEXT_SEAT
           - NEXT_SEAT
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
         tradeTypeList:
           type: array
           description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
           items:
             type: string
+            description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
             enum:
             - DELIVERY
             - MEET
@@ -1282,47 +1341,35 @@ components:
           type: string
           description: 좌석 등급
           example: 등급
-          minLength: 1
         seatFloor:
           type: string
           description: 좌석 층/위치
           example: 위치
-          minLength: 1
         seatZone:
           type: string
           description: 좌석 구역
           example: 구역
-          minLength: 1
         seatNo:
           type: integer
-          format: int32
           description: 좌석 열
+          format: int32
           example: 1
         eventDateTime:
           type: string
-          format: date-time
           description: 콘서트 날짜
-          example: 2025-01-11 11:11
+          format: date-time
         categoryId:
           type: integer
-          format: int64
           description: 카테고리 pk, 가장 최하위 카테고리입니다.
+          format: int64
           example: 1
+      description: 콘서트 티켓 생성 정보 데이터
+    com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request:
       required:
       - categoryId
-      - eventDateTime
+      - seatAway
       - seatFloor
-      - seatGrade
       - seatZone
-    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto.Response:
-      type: object
-      properties:
-        concertTicketId:
-          type: integer
-          format: int64
-          description: 생성된 콘서트 티켓 pk
-          example: 1
-    com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto.Request:
       type: object
       properties:
         name:
@@ -1331,13 +1378,13 @@ components:
           example: 티켓
         ticketCount:
           type: integer
-          format: int32
           description: 티켓 수량
+          format: int32
           example: 1
         ticketPerPrice:
           type: integer
-          format: int64
           description: 티켓 하나당 가격
+          format: int64
           example: 5000
         isNextSeat:
           type: string
@@ -1345,11 +1392,14 @@ components:
           enum:
           - NOT_NEXT_SEAT
           - NEXT_SEAT
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
         tradeTypeList:
           type: array
           description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
           items:
             type: string
+            description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
             enum:
             - DELIVERY
             - MEET
@@ -1361,57 +1411,50 @@ components:
           type: string
           description: 좌석 층/위치
           example: 위치
-          minLength: 1
         seatNo:
           type: integer
-          format: int32
           description: 좌석 열
+          format: int32
           example: 1
         seatAway:
           type: string
           description: 좌석 상대팀
           example: VS 두산
-          minLength: 1
         seatZone:
           type: string
           description: 좌석 존
           example: A
-          minLength: 1
         eventDateTime:
           type: string
-          format: date-time
           description: 경기 날짜
-          example: 2025-01-11 11:11
+          format: date-time
         categoryId:
           type: integer
-          format: int64
           description: 카테고리 pk, 가장 최하위 카테고리입니다.
+          format: int64
           example: 1
-      required:
-      - categoryId
-      - eventDateTime
-      - seatAway
-      - seatFloor
-      - seatZone
-    com.unicsolution.ttp.seat.dto.SeatCreateDto.Response:
+      description: 야구 티켓 생성 정보 데이터
+    com.unicsolution.ttp.seat.dto.SeatCreateDto$Response:
       type: object
       properties:
         name:
           type: string
           description: 생성된 좌석 이름
           example: 좌석
-    com.unicsolution.ttp.seat.dto.SeatCreateDto.Request:
+    com.unicsolution.ttp.seat.dto.SeatCreateDto$Request:
+      required:
+      - categoryId
+      - seatName
       type: object
       properties:
         seatName:
           type: string
           description: 좌석 이름
           example: 좌석
-          minLength: 1
         categoryId:
           type: integer
+          description: 카테고리 pk, 최하위 카테고리를 등록합니다.
           format: int64
-          description: 카테고리 pk, 대분류 카테고리를 등록합니다.
           example: 1
         seatType:
           type: string
@@ -1419,12 +1462,16 @@ components:
           enum:
           - GRADE
           - FLOOR
+          - ZONE
+          - AWAY
+          - GRADE
+          - FLOOR
           - AWAY
           - ZONE
+    com.unicsolution.ttp.payment.dto.PaymentInfoDto$Request:
       required:
-      - categoryId
-      - seatName
-    com.unicsolution.ttp.payment.dto.PaymentInfoDto.Request:
+      - memberId
+      - orderId
       type: object
       properties:
         orderId:
@@ -1434,13 +1481,10 @@ components:
           type: integer
           format: int64
         price:
+          minimum: 1
           type: integer
           format: int64
-          minimum: 1
-      required:
-      - memberId
-      - orderId
-    com.unicsolution.ttp.payment.dto.PaymentReadyDto.Response:
+    com.unicsolution.ttp.payment.dto.PaymentReadyDto$Response:
       type: object
       properties:
         tid:
@@ -1450,13 +1494,13 @@ components:
         created_at:
           type: string
           format: date-time
-    com.unicsolution.ttp.order.dto.OrderCreateDto.Request:
+    com.unicsolution.ttp.order.dto.OrderCreateDto$Request:
       type: object
       properties:
         price:
           type: integer
           format: int32
-    com.unicsolution.ttp.order.dto.OrderCreateDto.Response:
+    com.unicsolution.ttp.order.dto.OrderCreateDto$Response:
       type: object
       properties:
         orderId:
@@ -1465,45 +1509,41 @@ components:
         memberId:
           type: integer
           format: int64
-    com.unicsolution.ttp.member.dto.MemberSignUpDto.Response:
+    com.unicsolution.ttp.member.dto.MemberSignUpDto$Response:
       type: object
       properties:
         memberId:
           type: string
           description: 회원가입된 아이디
           example: test
-    com.unicsolution.ttp.member.dto.MemberSignUpDto.Request:
-      type: object
-      properties:
-        memberId:
-          type: string
-          description: 아이디
-          example: test
-          minLength: 1
-          pattern: "^[a-z0-9]{6,12}$"
-        password:
-          type: string
-          description: 비밀번호
-          example: abc1234
-          minLength: 1
-          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
-        confirmPassword:
-          type: string
-          description: 비밀번호 확인
-          example: abc1234
-          minLength: 1
-        email:
-          type: string
-          description: 이메일
-          example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+    com.unicsolution.ttp.member.dto.MemberSignUpDto$Request:
       required:
       - confirmPassword
       - email
       - memberId
       - password
-    com.unicsolution.ttp.member.dto.MemberLoginDto.Response:
+      type: object
+      properties:
+        memberId:
+          pattern: "^[a-z0-9]{6,12}$"
+          type: string
+          description: 아이디
+          example: test
+        password:
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+          type: string
+          description: 비밀번호
+          example: abc1234
+        confirmPassword:
+          type: string
+          description: 비밀번호 확인
+          example: abc1234
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 이메일
+          example: test@naver.com
+    com.unicsolution.ttp.member.dto.MemberLoginDto$Response:
       type: object
       properties:
         accessToken:
@@ -1514,171 +1554,157 @@ components:
           type: string
           description: 회원 아이디
           example: test
-    com.unicsolution.ttp.member.dto.MemberLoginDto.Request:
+    com.unicsolution.ttp.member.dto.MemberLoginDto$Request:
+      required:
+      - memberId
+      - password
       type: object
       properties:
         memberId:
           type: string
           description: 아이디
           example: test
-          minLength: 1
         password:
           type: string
           description: 비밀번호
           example: abc1234
-          minLength: 1
+    com.unicsolution.ttp.member.dto.MemberFindPasswordDto$Request:
       required:
+      - email
       - memberId
-      - password
-    com.unicsolution.ttp.member.dto.MemberFindPasswordDto.Request:
       type: object
       properties:
         memberId:
           type: string
           description: 회원 아이디
           example: test
-          minLength: 1
         email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
           type: string
           description: 이메일 주소
           example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
-      required:
-      - email
-      - memberId
-    com.unicsolution.ttp.member.dto.MemberFindIdDto.Response:
+    com.unicsolution.ttp.member.dto.MemberFindIdDto$Response:
       type: object
       properties:
         memberId:
           type: string
           description: 조회된 회원 아이디
           example: test
-    com.unicsolution.ttp.member.dto.MemberFindIdDto.Request:
+    com.unicsolution.ttp.member.dto.MemberFindIdDto$Request:
+      required:
+      - email
       type: object
       properties:
         email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
           type: string
           description: 이메일 주소
           example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+    com.unicsolution.ttp.member.dto.MemberCheckIdDto$Request:
       required:
-      - email
-    com.unicsolution.ttp.member.dto.MemberCheckIdDto.Request:
+      - memberId
       type: object
       properties:
         memberId:
+          pattern: "^[a-z0-9]{6,12}$"
           type: string
           description: 중복 확인할 아이디
           example: test
-          minLength: 1
-          pattern: "^[a-z0-9]{6,12}$"
+    com.unicsolution.ttp.member.dto.MemberCheckEmailDto$Request:
       required:
-      - memberId
-    com.unicsolution.ttp.member.dto.MemberCheckEmailDto.Request:
+      - email
       type: object
       properties:
         email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
           type: string
           description: 중복 확인할 이메일 주소
           example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
-      required:
-      - email
-    com.unicsolution.ttp.mail.dto.MailSendDto.Response:
+    com.unicsolution.ttp.mail.dto.MailSendDto$Response:
       type: object
       properties:
         email:
           type: string
           description: 전송 받을 이메일 주소
           example: test@naver.com
-    com.unicsolution.ttp.mail.dto.MailSendDto.Request:
+    com.unicsolution.ttp.mail.dto.MailSendDto$Request:
+      required:
+      - email
       type: object
       properties:
         email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
           type: string
           description: 받을 이메일 주소
           example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
-      required:
-      - email
-    com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Response:
+    com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Response:
       type: object
       properties:
         email:
           type: string
           description: 인증된 이메일 주소
           example: test@naver.com
-    com.unicsolution.ttp.mail.dto.MailAuthCheckDto.Request:
-      type: object
-      properties:
-        email:
-          type: string
-          description: 인증번호를 전송받은 이메일
-          example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
-        authNum:
-          type: string
-          description: 인증번호
-          example: 2123
-          minLength: 1
-          pattern: "^[0-9]{4}$"
+    com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Request:
       required:
       - authNum
       - email
-    com.unicsolution.ttp.member.dto.MemberChangePasswordDto.Request:
       type: object
       properties:
-        curPassword:
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
           type: string
-          description: 변경 전 패스워드
-          example: abc123
-          minLength: 1
-          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
-        newPassword:
+          description: 인증번호를 전송받은 이메일
+          example: test@naver.com
+        authNum:
+          pattern: "^[0-9]{4}$"
           type: string
-          description: 변경할 패스워드
-          example: abc123
-          minLength: 1
-          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
-        confirmPassword:
-          type: string
-          description: 변경할 패스워드 확인
-          example: abc123
-          minLength: 1
+          description: 인증번호
+          example: '2123'
+    com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request:
       required:
       - confirmPassword
       - curPassword
       - newPassword
-    com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Response:
+      type: object
+      properties:
+        curPassword:
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+          type: string
+          description: 변경 전 패스워드
+          example: abc123
+        newPassword:
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+          type: string
+          description: 변경할 패스워드
+          example: abc123
+        confirmPassword:
+          type: string
+          description: 변경할 패스워드 확인
+          example: abc123
+    com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Response:
       type: object
       properties:
         email:
           type: string
           description: 변경된 이메일 주소
           example: test@naver.com
-    com.unicsolution.ttp.member.dto.MemberChangeEmailDto.Request:
+    com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Request:
+      required:
+      - email
       type: object
       properties:
         email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
           type: string
           description: 변경할 이메일 주소
           example: test@naver.com
-          minLength: 1
-          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
-      required:
-      - email
-    com.unicsolution.ttp.seat.dto.SeatGetDto.Response:
+    com.unicsolution.ttp.seat.dto.SeatGetDto$Response:
       type: object
       properties:
         id:
           type: integer
-          format: int64
           description: 좌석 pk
+          format: int64
           example: 1
         seatName:
           type: string
@@ -1692,7 +1718,12 @@ components:
           - FLOOR
           - ZONE
           - AWAY
-    com.unicsolution.ttp.ticket.dto.TicketFormDto.Response:
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+      description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
+    com.unicsolution.ttp.ticket.dto.TicketFormDto$Response:
       type: object
       properties:
         eventDateTimeList:
@@ -1700,81 +1731,68 @@ components:
           description: 이벤트 시작 날짜, 비어있을 수 있습니다.
           items:
             type: string
+            description: 이벤트 시작 날짜, 비어있을 수 있습니다.
             format: date-time
         seatGradeList:
           type: array
           description: 좌석 등급 리스트, 비어있을 수 있습니다.
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
         seatFloorList:
           type: array
           description: 좌석 층/위치 리스트
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
         seatZoneList:
           type: array
           description: 좌석 구역 리스트
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
         seatAwayList:
           type: array
           description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
     com.unicsolution.ttp.config.PageListDto:
       type: object
       properties:
         totalPage:
           type: integer
-          format: int32
           description: 전체 페이지 수
+          format: int32
           example: 10
         totalElements:
           type: integer
-          format: int64
           description: 전체 데이터 수
+          format: int64
           example: 310
         curPageNumber:
           type: integer
-          format: int32
           description: 현재 페이지, 0부터 시작합니다.
+          format: int32
           example: 0
         curPageSize:
           type: integer
-          format: int32
           description: 현재 페이지에 표시된 데이터 수
+          format: int32
           example: 10
         content:
           type: array
           description: 현재 페이지의 데이터
-          items: {}
+          items:
+            type: object
+            description: 현재 페이지의 데이터
         first:
           type: boolean
         last:
           type: boolean
-    org.springdoc.core.converters.models.Pageable:
+    com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response:
       type: object
-      properties:
-        page:
-          type: integer
-          format: int32
-          minimum: 0
-        size:
-          type: integer
-          format: int32
-          minimum: 1
-        sort:
-          type: array
-          items:
-            type: string
-    com.unicsolution.ttp.event.dto.ConcertEventGetDto.Response:
-      type: object
-      description: 이벤트 정보
       properties:
         id:
           type: integer
-          format: int64
           description: 콘서트 이벤트 pk
+          format: int64
           example: 1
         name:
           type: string
@@ -1785,14 +1803,16 @@ components:
           description: 콘서트 날짜
           items:
             type: string
+            description: 콘서트 날짜
             format: date-time
-    com.unicsolution.ttp.image.dto.ImageGetDto.Response:
+      description: 이벤트 정보
+    com.unicsolution.ttp.image.dto.ImageGetDto$Response:
       type: object
       properties:
         id:
           type: integer
-          format: int64
           description: 이미지 pk
+          format: int64
           example: 1
         imageUrl:
           type: string
@@ -1802,13 +1822,14 @@ components:
           type: string
           description: 이미지 이름
           example: 이미지
-    com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto.Response:
+      description: 이미지 리스트, 비어있을 수 있습니다.
+    com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response:
       type: object
       properties:
         id:
           type: integer
-          format: int64
           description: 티켓 pk
+          format: int64
           example: 1
         name:
           type: string
@@ -1828,13 +1849,13 @@ components:
           example: 카테고리3
         count:
           type: integer
-          format: int32
           description: 티켓 수
+          format: int32
           example: 1
         perPrice:
           type: integer
-          format: int64
           description: 티켓 하나당 가격
+          format: int64
           example: 5000
         isNextSeat:
           type: string
@@ -1842,11 +1863,14 @@ components:
           enum:
           - NOT_NEXT_SEAT
           - NEXT_SEAT
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
         tradeTypeList:
           type: array
           description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
           items:
             type: string
+            description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
             enum:
             - DELIVERY
             - MEET
@@ -1855,8 +1879,7 @@ components:
           description: 거래 설명
           example: 거래 설명
         concertEvent:
-          "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.ConcertEventGetDto.Response"
-          description: 이벤트 정보
+          "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response"
         seatFloor:
           type: string
           description: 좌석 층/위치 정보
@@ -1867,24 +1890,24 @@ components:
           example: 구역
         seatNo:
           type: integer
-          format: int32
           description: 좌석 열 정보
+          format: int32
           example: 3
         imageList:
           type: array
           description: 이미지 리스트, 비어있을 수 있습니다.
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.image.dto.ImageGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.image.dto.ImageGetDto$Response"
         createdAt:
           type: string
-          format: date-time
           description: 생성 날짜
-    com.unicsolution.ttp.payment.dto.PaymentFailDto.Response:
+          format: date-time
+    com.unicsolution.ttp.payment.dto.PaymentFailDto$Response:
       type: object
       properties:
         message:
           type: string
-    com.unicsolution.ttp.payment.dto.PaymentCancelDto.Response:
+    com.unicsolution.ttp.payment.dto.PaymentCancelDto$Response:
       type: object
       properties:
         message:
@@ -1898,7 +1921,7 @@ components:
         tax_free:
           type: integer
           format: int32
-    com.unicsolution.ttp.payment.dto.PaymentApproveDto.Response:
+    com.unicsolution.ttp.payment.dto.PaymentApproveDto$Response:
       type: object
       properties:
         aid:
@@ -1926,12 +1949,27 @@ components:
         approved_at:
           type: string
           format: date-time
-    com.unicsolution.ttp.point.dto.PointBalanceDto.Response:
+    com.unicsolution.ttp.point.dto.PointBalanceDto$Response:
       type: object
       properties:
         pointAmount:
           type: integer
           format: int64
+    org.springdoc.core.converters.models.Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
     PageableObject:
       type: object
       properties:
@@ -1959,7 +1997,7 @@ components:
           type: boolean
         unsorted:
           type: boolean
-    com.unicsolution.ttp.point.dto.PointHistoryDto.Response:
+    com.unicsolution.ttp.point.dto.PointHistoryDto$Response:
       type: object
       properties:
         id:
@@ -1983,7 +2021,7 @@ components:
         createdAt:
           type: string
           format: date-time
-    org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto.Response:
+    org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto$Response:
       type: object
       properties:
         totalElements:
@@ -2002,7 +2040,7 @@ components:
         content:
           type: array
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.point.dto.PointHistoryDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.point.dto.PointHistoryDto$Response"
         number:
           type: integer
           format: int32
@@ -2015,13 +2053,13 @@ components:
           "$ref": "#/components/schemas/PageableObject"
         empty:
           type: boolean
-    com.unicsolution.ttp.member.dto.MemberGetDto.Response:
+    com.unicsolution.ttp.member.dto.MemberGetDto$Response:
       type: object
       properties:
         id:
           type: integer
-          format: int64
           description: 회원 pk
+          format: int64
           example: 1
         memberId:
           type: string
@@ -2037,8 +2075,8 @@ components:
           example: true
         point:
           type: integer
-          format: int64
           description: 보유 포인트
+          format: int64
           example: 1000
         social:
           type: string
@@ -2050,15 +2088,15 @@ components:
           example: kldasjf213
         createdAt:
           type: string
-          format: date-time
           description: 회원 가입 날짜
-    com.unicsolution.ttp.category.dto.CategoryGetDto.Response:
+          format: date-time
+    com.unicsolution.ttp.category.dto.CategoryGetDto$Response:
       type: object
       properties:
         id:
           type: integer
-          format: int64
           description: 카테고리 pk
+          format: int64
           example: 1
         categoryName:
           type: string
@@ -2066,16 +2104,16 @@ components:
           example: 스포츠
         parentId:
           type: integer
-          format: int64
           description: 부모 카테고리 pk
+          format: int64
           example: 3
-    com.unicsolution.ttp.category.dto.CategoryTreeDto.Response:
+    com.unicsolution.ttp.category.dto.CategoryTreeDto$Response:
       type: object
       properties:
         id:
           type: integer
-          format: int64
           description: 카테고리 pk
+          format: int64
           example: 1
         categoryName:
           type: string
@@ -2085,7 +2123,7 @@ components:
           type: array
           description: 자식 카테고리 리스트, 비어있을 수 있습니다.
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto.Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
   securitySchemes:
     bearerAuth:
       type: http
