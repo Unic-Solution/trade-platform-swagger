@@ -10,10 +10,14 @@ servers:
 security:
 - {}
 tags:
+- name: 결제 API
+  description: 포트원을 통해 결제가 완료되는 시점에 사용되는 API입니다.
 - name: 소셜 로그인 API
   description: 소셜 로그인 관련 API 입니다.
 - name: 카테고리 API
   description: 카테고리 관련 API 입니다.
+- name: 주문 API
+  description: 결제 전 주문 테이블을 생성하는 API입니다.
 - name: 메일 API
   description: 메일 관련 API 입니다.
 - name: 좌석 API
@@ -244,29 +248,55 @@ paths:
                 type: string
       security:
       - bearerAuth: []
-  "/api/payment/payment/ready":
+  "/api/payments/payment":
     post:
       tags:
-      - payment-controller
-      operationId: paymentReady
+      - 결제 API
+      summary: 포인트 결제 컨트롤러
+      description: 포인트 결제에 대한 서버 검증 후 회원의 포인트를 증가시켜줍니다.
+      operationId: validatePaymentController
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentInfoDto$Request"
+              "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentValidateDto$Request"
         required: true
       responses:
         '200':
-          description: OK
+          description: 결제 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentReadyDto$Response"
-  "/api/members/orders/create":
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/orders/order":
     post:
       tags:
-      - order-controller
-      operationId: createOrder
+      - 주문 API
+      summary: 주문 생성 컨트롤러
+      description: 주문을 생성합니다.
+      operationId: createOrderController
       requestBody:
         content:
           application/json:
@@ -275,11 +305,33 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: 주문 생성 성공
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
   "/api/members/member/signup":
     post:
       tags:
@@ -978,53 +1030,6 @@ paths:
             application/json:
               schema:
                 type: string
-  "/api/payment/payment/fail":
-    get:
-      tags:
-      - payment-controller
-      operationId: paymentFail
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentFailDto$Response"
-  "/api/payment/payment/cancel":
-    get:
-      tags:
-      - payment-controller
-      operationId: paymentCancel
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentCancelDto$Response"
-  "/api/payment/payment/approve":
-    get:
-      tags:
-      - payment-controller
-      operationId: paymentApprove
-      parameters:
-      - name: partner_order_id
-        in: query
-        required: true
-        schema:
-          type: string
-      - name: pg_token
-        in: query
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentApproveDto$Response"
   "/api/oauth2/token":
     get:
       tags:
@@ -1468,47 +1473,75 @@ components:
           - FLOOR
           - AWAY
           - ZONE
-    com.unicsolution.ttp.payment.dto.PaymentInfoDto$Request:
+    com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response:
+      type: object
+      properties:
+        price:
+          type: integer
+          description: 결제 금액
+          format: int64
+          example: 1000
+        permitDateTime:
+          type: string
+          description: 결제 날짜
+          format: date-time
+    com.unicsolution.ttp.payment.dto.PaymentValidateDto$Request:
       required:
-      - memberId
+      - impUid
       - orderId
       type: object
       properties:
         orderId:
           type: integer
+          description: 주문 pk
           format: int64
-        memberId:
-          type: integer
-          format: int64
-        price:
-          minimum: 1
-          type: integer
-          format: int64
-    com.unicsolution.ttp.payment.dto.PaymentReadyDto$Response:
+          example: 1
+        impUid:
+          type: string
+          description: 결제 고유 번호
+          example: imp_fafdsaeuiryqjkh
+    com.unicsolution.ttp.order.dto.OrderCreateDto$Response:
       type: object
       properties:
-        tid:
+        id:
+          type: integer
+          description: 주문 pk
+          format: int64
+          example: 1
+        pgCode:
           type: string
-        next_redirect_pc_url:
+          description: 가맹점 식별코드
+          example: IMP89120490
+        merchantUid:
           type: string
-        created_at:
+          description: 고유 주문번호
+          example: 20250801-hfksdlhfkehafjdslaghle
+        itemName:
           type: string
-          format: date-time
+          description: 상품 이름
+          example: 1000 포인트
+        price:
+          type: integer
+          description: 가격
+          format: int64
+          example: 1000
+        buyerEmail:
+          type: string
+          description: 구매자 이메일
+          example: test@naver.com
+        buyerId:
+          type: string
+          description: 구매자 아이디
+          example: test
     com.unicsolution.ttp.order.dto.OrderCreateDto$Request:
       type: object
       properties:
         price:
+          minimum: 100
           type: integer
-          format: int32
-    com.unicsolution.ttp.order.dto.OrderCreateDto$Response:
-      type: object
-      properties:
-        orderId:
-          type: integer
+          description: 구입하는 가격, 최소 가격은 100입니다.
           format: int64
-        memberId:
-          type: integer
-          format: int64
+          example: 100
     com.unicsolution.ttp.member.dto.MemberSignUpDto$Response:
       type: object
       properties:
@@ -1902,53 +1935,6 @@ components:
           type: string
           description: 생성 날짜
           format: date-time
-    com.unicsolution.ttp.payment.dto.PaymentFailDto$Response:
-      type: object
-      properties:
-        message:
-          type: string
-    com.unicsolution.ttp.payment.dto.PaymentCancelDto$Response:
-      type: object
-      properties:
-        message:
-          type: string
-    com.unicsolution.ttp.payment.dto.Amount:
-      type: object
-      properties:
-        total:
-          type: integer
-          format: int32
-        tax_free:
-          type: integer
-          format: int32
-    com.unicsolution.ttp.payment.dto.PaymentApproveDto$Response:
-      type: object
-      properties:
-        aid:
-          type: string
-        tid:
-          type: string
-        cid:
-          type: string
-        partner_order_id:
-          type: string
-        partner_user_id:
-          type: string
-        payment_method_type:
-          type: string
-        amount:
-          "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.Amount"
-        item_name:
-          type: string
-        quantity:
-          type: integer
-          format: int32
-        created_at:
-          type: string
-          format: date-time
-        approved_at:
-          type: string
-          format: date-time
     com.unicsolution.ttp.point.dto.PointBalanceDto$Response:
       type: object
       properties:
@@ -1984,9 +1970,9 @@ components:
         pageSize:
           type: integer
           format: int32
-        paged:
-          type: boolean
         unpaged:
+          type: boolean
+        paged:
           type: boolean
     SortObject:
       type: object
@@ -2024,12 +2010,12 @@ components:
     org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto$Response:
       type: object
       properties:
-        totalElements:
-          type: integer
-          format: int64
         totalPages:
           type: integer
           format: int32
+        totalElements:
+          type: integer
+          format: int64
         first:
           type: boolean
         last:
