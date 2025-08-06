@@ -1202,75 +1202,24 @@ paths:
                 type: string
       security:
       - bearerAuth: []
-  "/api/categories/tree/{categoryId}":
+  "/api/categories":
     get:
       tags:
       - 카테고리 API
-      summary: 카테고리에 대한 정보와 자식 카테고리 리스트를 함께 조회
-      description: 카테고리 정보와 자식 리스트까지 함께 조회합니다. 자식 리스트는 비어있을 수 있습니다.
-      operationId: getCategoryController
-      parameters:
-      - name: categoryId
-        in: path
-        description: 카테고리 pk
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+      summary: 전체 카테고리 리스트 조회
+      description: 자식 카테고리 리스트를 포함하는 카테고리 전체 리스트 조회
+      operationId: getCategoriesController
       responses:
         '200':
-          description: 카테고리 정보 조회 성공
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
-        '400':
-          description: 클라이언트 에러
+          description: 전체 카테고리 리스트 조회 성공
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
-        '404':
-          description: 존재하지 않는 엔드포인트
-          content:
-            application/json:
-              schema:
-                type: string
-        '500':
-          description: 예측하지 못한 서버 에러
-          content:
-            application/json:
-              schema:
-                type: string
-  "/api/categories/parent":
-    get:
-      tags:
-      - 카테고리 API
-      summary: 대분류 카테고리 리스트 조회
-      description: 대분류 카테고리 리스트를 조회합니다.
-      operationId: getParentCategoryList
-      responses:
-        '200':
-          description: 대분류 카테고리 리스트 조회 성공
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
-        '400':
-          description: 클라이언트 에러
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-        '404':
-          description: 존재하지 않는 엔드포인트
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
+        '401':
+          description: 비로그인 상태
           content:
             application/json:
               schema:
@@ -1970,9 +1919,9 @@ components:
         pageSize:
           type: integer
           format: int32
-        unpaged:
-          type: boolean
         paged:
+          type: boolean
+        unpaged:
           type: boolean
     SortObject:
       type: object
@@ -2010,12 +1959,12 @@ components:
     org.springframework.data.domain.PageCom.unicsolution.ttp.point.dto.PointHistoryDto$Response:
       type: object
       properties:
-        totalPages:
-          type: integer
-          format: int32
         totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
         first:
           type: boolean
         last:
@@ -2032,11 +1981,11 @@ components:
           format: int32
         sort:
           "$ref": "#/components/schemas/SortObject"
+        pageable:
+          "$ref": "#/components/schemas/PageableObject"
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          "$ref": "#/components/schemas/PageableObject"
         empty:
           type: boolean
     com.unicsolution.ttp.member.dto.MemberGetDto$Response:
@@ -2076,23 +2025,6 @@ components:
           type: string
           description: 회원 가입 날짜
           format: date-time
-    com.unicsolution.ttp.category.dto.CategoryGetDto$Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: 카테고리 pk
-          format: int64
-          example: 1
-        categoryName:
-          type: string
-          description: 카테고리 이름
-          example: 스포츠
-        parentId:
-          type: integer
-          description: 부모 카테고리 pk
-          format: int64
-          example: 3
     com.unicsolution.ttp.category.dto.CategoryTreeDto$Response:
       type: object
       properties:
@@ -2105,11 +2037,19 @@ components:
           type: string
           description: 카테고리 이름
           example: 카테고리
+        categoryType:
+          type: string
+          description: 카테고리 타입, 기타 카테고리 판별용, NORMAL - 일반 카테고리, ETC - 기타 카테고리
+          enum:
+          - NORMAL
+          - ETC
+          - NORMAL
+          - ETC
         child:
           type: array
-          description: 자식 카테고리 리스트, 비어있을 수 있습니다.
+          description: 자식 카테고리 리스트, 비어있을 수 있습니다, 현재 dto의 정보가 똑같이 들어가 있습니다.
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
   securitySchemes:
     bearerAuth:
       type: http
