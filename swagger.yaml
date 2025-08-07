@@ -1,3121 +1,2059 @@
-{
-  "openapi": "3.0.1",
-  "info": {
-    "title": "티켓 거래 플랫폼 API Document",
-    "description": "티켓 거래 플랫폼의 서버 api 명세서",
-    "version": "1.0"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "Generated server url"
-    }
-  ],
-  "security": [
-    {
-
-    }
-  ],
-  "tags": [
-    {
-      "name": "결제 API",
-      "description": "포트원을 통해 결제가 완료되는 시점에 사용되는 API입니다."
-    },
-    {
-      "name": "소셜 로그인 API",
-      "description": "소셜 로그인 관련 API 입니다."
-    },
-    {
-      "name": "카테고리 API",
-      "description": "카테고리 관련 API 입니다."
-    },
-    {
-      "name": "주문 API",
-      "description": "결제 전 주문 테이블을 생성하는 API입니다."
-    },
-    {
-      "name": "메일 API",
-      "description": "메일 관련 API 입니다."
-    },
-    {
-      "name": "포인트 API",
-      "description": "포인트 관련 API입니다."
-    },
-    {
-      "name": "좌석 API",
-      "description": "좌석과 관련된 API 입니다."
-    },
-    {
-      "name": "회원 API",
-      "description": "회원과 관련된 API입니다."
-    },
-    {
-      "name": "티켓 API",
-      "description": "티켓 관련 API 입니다."
-    }
-  ],
-  "paths": {
-    "/api/tickets/ticket/purchase/{ticketId}": {
-      "post": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "티켓 구매 컨트롤러",
-        "description": "티켓을 구매합니다.",
-        "operationId": "purchaseTicketController",
-        "parameters": [
-          {
-            "name": "ticketId",
-            "in": "path",
-            "description": "티켓 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "티켓 구매 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/tickets/concert/ticket": {
-      "post": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "콘서트 티켓 생성 컨트롤러",
-        "description": "콘서트 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.",
-        "operationId": "createConcertTicketController",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "request"
-                ],
-                "type": "object",
-                "properties": {
-                  "imageList": {
-                    "type": "array",
-                    "description": "이미지 리스트, 필수는 아닙니다.",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "request": {
-                    "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Request"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "티켓 생성 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/tickets/baseball/ticket": {
-      "post": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "야구 티켓 생성 컨트롤러",
-        "description": "야구 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.",
-        "operationId": "createBaseBallTicketController",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "request"
-                ],
-                "type": "object",
-                "properties": {
-                  "imageList": {
-                    "type": "array",
-                    "description": "이미지 리스트, 필수는 아닙니다.",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "request": {
-                    "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "티켓 생성 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/seats/seat": {
-      "post": {
-        "tags": [
-          "좌석 API"
-        ],
-        "summary": "좌석 생성 컨트롤러",
-        "description": "좌석을 생성합니다. 관리자 권한이 필요합니다.",
-        "operationId": "createSeatController",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "좌석 생성 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인 필요",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "권한 필요",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/payments/payment": {
-      "post": {
-        "tags": [
-          "결제 API"
-        ],
-        "summary": "포인트 결제 컨트롤러",
-        "description": "포인트 결제에 대한 서버 검증 후 회원의 포인트를 증가시켜줍니다.",
-        "operationId": "validatePaymentController",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentValidateDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "결제 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/orders/order": {
-      "post": {
-        "tags": [
-          "주문 API"
-        ],
-        "summary": "주문 생성 컨트롤러",
-        "description": "주문을 생성합니다.",
-        "operationId": "createOrderController",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "주문 생성 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/members/member/signup": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "회원가입",
-        "description": "회원가입을 요청합니다. 일반 회원가입의 경우 사용합니다.",
-        "operationId": "singUp",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "회원가입 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member/logout": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "로그아웃",
-        "description": "로그아웃을 요청합니다.",
-        "operationId": "logout",
-        "responses": {
-          "200": {
-            "description": "로그아웃 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인이 필요한 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/members/member/login": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "로그인",
-        "description": "로그인을 요청합니다. 일반 로그인의 경우 사용합니다.",
-        "operationId": "login",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "로그인 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member/find-password": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "비밀번호 찾기",
-        "description": "아이디와 이메일 정보를 통해 비밀번호를 찾습니다. 소셜 회원의 경우 사용할 수 없습니다. 새로 생성된 비밀번호를 이메일로 발급하며 해당 비밀번호로 로그인 이후 비밀번호 변경을 유도합니다.",
-        "operationId": "findPassword",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindPasswordDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "비밀번호 재발급 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member/find-id": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "아이디 찾기",
-        "description": "이메일 정보를 통해 아이디를 찾습니다. 소셜 회원은 사용하지 못합니다.",
-        "operationId": "findMemberId",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "아이디 찾기 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member/check-id": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "아이디 중복 확인",
-        "description": "아이디 중복 여부를 확인합니다. 회원 가입 시 사용합니다.",
-        "operationId": "checkMemberId",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckIdDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "사용 가능한 아이디",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member/check-email": {
-      "post": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "이메일 중복 확인",
-        "description": "이메일의 중복 여부를 확인합니다. 회원 가입 시 사용합니다.",
-        "operationId": "checkMemberEmailController",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckEmailDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "사용 가능한 이메일",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/mail/send-auth-mail": {
-      "post": {
-        "tags": [
-          "메일 API"
-        ],
-        "summary": "인증 메일 전송",
-        "description": "인증번호를 메일로 전송합니다.",
-        "operationId": "sendAuthMailController",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "메일 전송 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상치 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/mail/check-auth": {
-      "post": {
-        "tags": [
-          "메일 API"
-        ],
-        "summary": "인증번호 일치 여부 확인",
-        "description": "사용자가 작성한 인증번호와 이메일로 발송한 인증번호가 일치하는지 확인합니다.",
-        "operationId": "checkAuthController",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "인증번호 일치함",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상치 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member/change-password": {
-      "patch": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "비밀번호 변경",
-        "description": "사용 중인 비밀번호를 변경합니다. 소셜 회원은 사용할 수 없습니다.",
-        "operationId": "changePassword",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "비밀번호 변경 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인이 필요한 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/members/member/change-email": {
-      "patch": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "이메일 변경",
-        "description": "사용 중인 이메일을 변경합니다. 소셜 회원은 사용할 수 없습니다.",
-        "operationId": "changeEmail",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Request"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "이메일 변경 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인이 필요한 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/tickets/ticket/{categoryId}": {
-      "get": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "티켓 등록 시 등록 필드에 표시할 정보 조회 컨트롤러",
-        "description": "각 티켓마다 등록 시에 조회가 필요한 정보, 좌석, 날짜",
-        "operationId": "getFormController",
-        "parameters": [
-          {
-            "name": "categoryId",
-            "in": "path",
-            "description": "최하위 카테고리 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "등록 필드 정보 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketFormDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/tickets/concert/{categoryId}": {
-      "get": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "콘서트 티켓 리스트 조회 컨트롤러",
-        "description": "콘서트 티켓 리스트를 페이지네이션하여 조회합니다.",
-        "operationId": "getConcertTicketListController",
-        "parameters": [
-          {
-            "name": "categoryId",
-            "in": "path",
-            "description": "최하위 카테고리 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "표시할 페이지, 0부터 시작합니다, 기본값 = 0",
-            "example": 0
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "페이지에 표시할 데이터 수, 기본값 = 10",
-            "example": 10
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "티켓 리스트 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/tickets/concert/ticket/{ticketId}": {
-      "get": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "콘서트 티켓 상세 조회 컨트롤러",
-        "description": "콘서트 티켓의 정보를 상세 조회합니다.",
-        "operationId": "getConcertTicketController",
-        "parameters": [
-          {
-            "name": "ticketId",
-            "in": "path",
-            "description": "티켓 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "티켓 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/tickets/baseball/{categoryId}": {
-      "get": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "야구 티켓 리스트 조회 컨트롤러",
-        "description": "야구 티켓 리스트를 페이지네이션하여 조회합니다.",
-        "operationId": "getBaseBallTicketListController",
-        "parameters": [
-          {
-            "name": "categoryId",
-            "in": "path",
-            "description": "최하위 카테고리 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "표시할 페이지, 0부터 시작합니다, 기본값 = 0",
-            "example": 0
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "페이지에 표시할 데이터 수, 기본값 = 10",
-            "example": 10
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "티켓 리스트 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/tickets/baseball/ticket/{ticketId}": {
-      "get": {
-        "tags": [
-          "티켓 API"
-        ],
-        "summary": "야구 티켓 상세 조회 컨트롤러",
-        "description": "야구 티켓의 정보를 상세 조회합니다.",
-        "operationId": "getBaseBallTicketController",
-        "parameters": [
-          {
-            "name": "ticketId",
-            "in": "path",
-            "description": "티켓 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "티켓 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/points/history": {
-      "get": {
-        "tags": [
-          "포인트 API"
-        ],
-        "summary": "포인트 충전 및 사용 내역 조회",
-        "description": "포인트를 충전하거나 사용 또는 판매 수익에 대한 내역을 조회하며 필터링 기능이 있습니다.",
-        "operationId": "getPointList",
-        "parameters": [
-          {
-            "name": "startDate",
-            "in": "query",
-            "description": "조회 시작 날짜, 필수값은 아닙니다.",
-            "required": false,
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": "2025-08-08",
-                  "default": "오늘 날짜"
-                }
-              }
-            }
-          },
-          {
-            "name": "endDate",
-            "in": "query",
-            "description": "조회 마지막 날짜, 필수값은 아닙니다.",
-            "required": false,
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": "2025-08-08",
-                  "default": "오늘 날짜"
-                }
-              }
-            }
-          },
-          {
-            "name": "sortType",
-            "in": "query",
-            "description": "정렬 방법, LATEST - 최신순, OLDEST - 오래된순, 필수는 아닙니다.",
-            "required": false,
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": "LATEST",
-                  "default": "LATEST",
-                  "enum": [
-                    "LATEST",
-                    "OLDEST"
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "현재 페이지, 필수값은 아니지만 페이지 변경에 따라 값을 변경해줘야 합니다.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": 0,
-                  "default": "0"
-                }
-              }
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "현재 페이지에 표시할 데이터 수, 필수값은 아닙니다.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": 10,
-                  "default": "10"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "포인트 내역 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "비로그인 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/oauth2/token": {
-      "get": {
-        "tags": [
-          "소셜 로그인 API"
-        ],
-        "summary": "소셜 회원 엑세스 토큰 발급",
-        "description": "소셜 로그인 성공 후 서버로부터 받은 code 값을 사용해 액세스 토큰 발급 받습니다.",
-        "operationId": "getToken",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "description": "서버로부터 받은 암호화된 코드",
-            "required": true,
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "엑세스 토큰 발급 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상치 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/members/member": {
-      "get": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "로그인한 회원 정보 조회",
-        "description": "로그인한 회원의 정보를 조회합니다.",
-        "operationId": "getMemberController",
-        "responses": {
-          "200": {
-            "description": "조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberGetDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인이 필요한 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "회원 API"
-        ],
-        "summary": "회원 탈퇴",
-        "description": "회원 탈퇴를 진행합니다. 회원 데이터는 소프트딜리트 처리됩니다.",
-        "operationId": "deleteMemberController",
-        "responses": {
-          "200": {
-            "description": "회원 탈퇴 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인이 필요한 상태",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트 호출",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예상하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/categories/tree/{categoryId}": {
-      "get": {
-        "tags": [
-          "카테고리 API"
-        ],
-        "summary": "카테고리에 대한 정보와 자식 카테고리 리스트를 함께 조회",
-        "description": "카테고리 정보와 자식 리스트까지 함께 조회합니다. 자식 리스트는 비어있을 수 있습니다.",
-        "operationId": "getCategoryController",
-        "parameters": [
-          {
-            "name": "categoryId",
-            "in": "path",
-            "description": "카테고리 pk",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "카테고리 정보 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/categories/parent": {
-      "get": {
-        "tags": [
-          "카테고리 API"
-        ],
-        "summary": "대분류 카테고리 리스트 조회",
-        "description": "대분류 카테고리 리스트를 조회합니다.",
-        "operationId": "getParentCategoryList",
-        "responses": {
-          "200": {
-            "description": "대분류 카테고리 리스트 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "클라이언트 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 엔드포인트",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "예측하지 못한 서버 에러",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response": {
-        "type": "object",
-        "properties": {
-          "ticketId": {
-            "type": "integer",
-            "description": "티켓 pk",
-            "format": "int64",
-            "example": 1
-          }
-        }
-      },
-      "com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response": {
-        "type": "object",
-        "properties": {
-          "concertTicketId": {
-            "type": "integer",
-            "description": "생성된 콘서트 티켓 pk",
-            "format": "int64",
-            "example": 1
-          }
-        }
-      },
-      "com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Request": {
-        "required": [
-          "categoryId",
-          "seatFloor",
-          "seatGrade",
-          "seatZone"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "티켓 이름, 기타 카테고리를 위한 컬럼입니다. 그 외의 경우 필수값이 아닙니다. 20자 내로 작성해야 합니다.",
-            "example": "티켓"
-          },
-          "ticketCount": {
-            "type": "integer",
-            "description": "티켓 수량",
-            "format": "int32",
-            "example": 1
-          },
-          "ticketPerPrice": {
-            "type": "integer",
-            "description": "티켓 하나당 가격",
-            "format": "int64",
-            "example": 5000
-          },
-          "isNextSeat": {
-            "type": "string",
-            "description": "연석 여부",
-            "enum": [
-              "NOT_NEXT_SEAT",
-              "NEXT_SEAT",
-              "NOT_NEXT_SEAT",
-              "NEXT_SEAT"
-            ]
-          },
-          "tradeTypeList": {
-            "type": "array",
-            "description": "거래 방법 (DELIVERY - 택배, MEET - 현장)",
-            "items": {
-              "type": "string",
-              "description": "거래 방법 (DELIVERY - 택배, MEET - 현장)",
-              "enum": [
-                "DELIVERY",
-                "MEET"
-              ]
-            }
-          },
-          "tradeDescription": {
-            "type": "string",
-            "description": "거래 설명, 필수가 아닙니다.",
-            "example": "description"
-          },
-          "seatGrade": {
-            "type": "string",
-            "description": "좌석 등급",
-            "example": "등급"
-          },
-          "seatFloor": {
-            "type": "string",
-            "description": "좌석 층/위치",
-            "example": "위치"
-          },
-          "seatZone": {
-            "type": "string",
-            "description": "좌석 구역",
-            "example": "구역"
-          },
-          "seatNo": {
-            "type": "integer",
-            "description": "좌석 열",
-            "format": "int32",
-            "example": 1
-          },
-          "eventDateTime": {
-            "type": "string",
-            "description": "콘서트 날짜",
-            "format": "date-time"
-          },
-          "categoryId": {
-            "type": "integer",
-            "description": "카테고리 pk, 가장 최하위 카테고리입니다.",
-            "format": "int64",
-            "example": 1
-          }
-        },
-        "description": "콘서트 티켓 생성 정보 데이터"
-      },
-      "com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request": {
-        "required": [
-          "categoryId",
-          "seatAway",
-          "seatFloor",
-          "seatZone"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "티켓 이름, 기타 카테고리를 위한 컬럼입니다. 그 외의 경우 필수값이 아닙니다. 20자 내로 작성해야 합니다.",
-            "example": "티켓"
-          },
-          "ticketCount": {
-            "type": "integer",
-            "description": "티켓 수량",
-            "format": "int32",
-            "example": 1
-          },
-          "ticketPerPrice": {
-            "type": "integer",
-            "description": "티켓 하나당 가격",
-            "format": "int64",
-            "example": 5000
-          },
-          "isNextSeat": {
-            "type": "string",
-            "description": "연석 여부",
-            "enum": [
-              "NOT_NEXT_SEAT",
-              "NEXT_SEAT",
-              "NOT_NEXT_SEAT",
-              "NEXT_SEAT"
-            ]
-          },
-          "tradeTypeList": {
-            "type": "array",
-            "description": "거래 방법 (DELIVERY - 택배, MEET - 현장)",
-            "items": {
-              "type": "string",
-              "description": "거래 방법 (DELIVERY - 택배, MEET - 현장)",
-              "enum": [
-                "DELIVERY",
-                "MEET"
-              ]
-            }
-          },
-          "tradeDescription": {
-            "type": "string",
-            "description": "거래 설명, 필수가 아닙니다.",
-            "example": "description"
-          },
-          "seatFloor": {
-            "type": "string",
-            "description": "좌석 층/위치",
-            "example": "위치"
-          },
-          "seatNo": {
-            "type": "integer",
-            "description": "좌석 열",
-            "format": "int32",
-            "example": 1
-          },
-          "seatAway": {
-            "type": "string",
-            "description": "좌석 상대팀",
-            "example": "VS 두산"
-          },
-          "seatZone": {
-            "type": "string",
-            "description": "좌석 존",
-            "example": "A"
-          },
-          "eventDateTime": {
-            "type": "string",
-            "description": "경기 날짜",
-            "format": "date-time"
-          },
-          "categoryId": {
-            "type": "integer",
-            "description": "카테고리 pk, 가장 최하위 카테고리입니다.",
-            "format": "int64",
-            "example": 1
-          }
-        },
-        "description": "야구 티켓 생성 정보 데이터"
-      },
-      "com.unicsolution.ttp.seat.dto.SeatCreateDto$Response": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "생성된 좌석 이름",
-            "example": "좌석"
-          }
-        }
-      },
-      "com.unicsolution.ttp.seat.dto.SeatCreateDto$Request": {
-        "required": [
-          "categoryId",
-          "seatName"
-        ],
-        "type": "object",
-        "properties": {
-          "seatName": {
-            "type": "string",
-            "description": "좌석 이름",
-            "example": "좌석"
-          },
-          "categoryId": {
-            "type": "integer",
-            "description": "카테고리 pk, 최하위 카테고리를 등록합니다.",
-            "format": "int64",
-            "example": 1
-          },
-          "seatType": {
-            "type": "string",
-            "description": "좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)",
-            "enum": [
-              "GRADE",
-              "FLOOR",
-              "ZONE",
-              "AWAY",
-              "GRADE",
-              "FLOOR",
-              "AWAY",
-              "ZONE"
-            ]
-          }
-        }
-      },
-      "com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response": {
-        "type": "object",
-        "properties": {
-          "price": {
-            "type": "integer",
-            "description": "결제 금액",
-            "format": "int64",
-            "example": 1000
-          },
-          "permitDateTime": {
-            "type": "string",
-            "description": "결제 날짜",
-            "format": "date-time"
-          }
-        }
-      },
-      "com.unicsolution.ttp.payment.dto.PaymentValidateDto$Request": {
-        "required": [
-          "impUid",
-          "orderId"
-        ],
-        "type": "object",
-        "properties": {
-          "orderId": {
-            "type": "integer",
-            "description": "주문 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "impUid": {
-            "type": "string",
-            "description": "결제 고유 번호",
-            "example": "imp_fafdsaeuiryqjkh"
-          }
-        }
-      },
-      "com.unicsolution.ttp.order.dto.OrderCreateDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "주문 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "pgCode": {
-            "type": "string",
-            "description": "가맹점 식별코드",
-            "example": "IMP89120490"
-          },
-          "merchantUid": {
-            "type": "string",
-            "description": "고유 주문번호",
-            "example": "20250801-hfksdlhfkehafjdslaghle"
-          },
-          "itemName": {
-            "type": "string",
-            "description": "상품 이름",
-            "example": "1000 포인트"
-          },
-          "price": {
-            "type": "integer",
-            "description": "가격",
-            "format": "int64",
-            "example": 1000
-          },
-          "buyerEmail": {
-            "type": "string",
-            "description": "구매자 이메일",
-            "example": "test@naver.com"
-          },
-          "buyerId": {
-            "type": "string",
-            "description": "구매자 아이디",
-            "example": "test"
-          }
-        }
-      },
-      "com.unicsolution.ttp.order.dto.OrderCreateDto$Request": {
-        "type": "object",
-        "properties": {
-          "price": {
-            "minimum": 100,
-            "type": "integer",
-            "description": "구입하는 가격, 최소 가격은 100입니다.",
-            "format": "int64",
-            "example": 100
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberSignUpDto$Response": {
-        "type": "object",
-        "properties": {
-          "memberId": {
-            "type": "string",
-            "description": "회원가입된 아이디",
-            "example": "test"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberSignUpDto$Request": {
-        "required": [
-          "confirmPassword",
-          "email",
-          "memberId",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "memberId": {
-            "pattern": "^[a-z0-9]{6,12}$",
-            "type": "string",
-            "description": "아이디",
-            "example": "test"
-          },
-          "password": {
-            "pattern": "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,\u003C.\u003E].*).{4,16}$",
-            "type": "string",
-            "description": "비밀번호",
-            "example": "abc1234"
-          },
-          "confirmPassword": {
-            "type": "string",
-            "description": "비밀번호 확인",
-            "example": "abc1234"
-          },
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "이메일",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberLoginDto$Response": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "액세스 토큰",
-            "example": "fjasdk;ghjioewjaklasdfkvljiorjewklafjdjafjgkheraklhkljdhsfjkv"
-          },
-          "memberId": {
-            "type": "string",
-            "description": "회원 아이디",
-            "example": "test"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberLoginDto$Request": {
-        "required": [
-          "memberId",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "memberId": {
-            "type": "string",
-            "description": "아이디",
-            "example": "test"
-          },
-          "password": {
-            "type": "string",
-            "description": "비밀번호",
-            "example": "abc1234"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberFindPasswordDto$Request": {
-        "required": [
-          "email",
-          "memberId"
-        ],
-        "type": "object",
-        "properties": {
-          "memberId": {
-            "type": "string",
-            "description": "회원 아이디",
-            "example": "test"
-          },
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberFindIdDto$Response": {
-        "type": "object",
-        "properties": {
-          "memberId": {
-            "type": "string",
-            "description": "조회된 회원 아이디",
-            "example": "test"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberFindIdDto$Request": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberCheckIdDto$Request": {
-        "required": [
-          "memberId"
-        ],
-        "type": "object",
-        "properties": {
-          "memberId": {
-            "pattern": "^[a-z0-9]{6,12}$",
-            "type": "string",
-            "description": "중복 확인할 아이디",
-            "example": "test"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberCheckEmailDto$Request": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "중복 확인할 이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.mail.dto.MailSendDto$Response": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "전송 받을 이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.mail.dto.MailSendDto$Request": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "받을 이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Response": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "인증된 이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Request": {
-        "required": [
-          "authNum",
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "인증번호를 전송받은 이메일",
-            "example": "test@naver.com"
-          },
-          "authNum": {
-            "pattern": "^[0-9]{4}$",
-            "type": "string",
-            "description": "인증번호",
-            "example": "2123"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request": {
-        "required": [
-          "confirmPassword",
-          "curPassword",
-          "newPassword"
-        ],
-        "type": "object",
-        "properties": {
-          "curPassword": {
-            "pattern": "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,\u003C.\u003E].*).{4,16}$",
-            "type": "string",
-            "description": "변경 전 패스워드",
-            "example": "abc123"
-          },
-          "newPassword": {
-            "pattern": "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,\u003C.\u003E].*).{4,16}$",
-            "type": "string",
-            "description": "변경할 패스워드",
-            "example": "abc123"
-          },
-          "confirmPassword": {
-            "type": "string",
-            "description": "변경할 패스워드 확인",
-            "example": "abc123"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Response": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "변경된 이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Request": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            "type": "string",
-            "description": "변경할 이메일 주소",
-            "example": "test@naver.com"
-          }
-        }
-      },
-      "com.unicsolution.ttp.seat.dto.SeatGetDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "좌석 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "seatName": {
-            "type": "string",
-            "description": "좌석 이름",
-            "example": "좌석"
-          },
-          "seatType": {
-            "type": "string",
-            "description": "좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)",
-            "enum": [
-              "GRADE",
-              "FLOOR",
-              "ZONE",
-              "AWAY",
-              "GRADE",
-              "FLOOR",
-              "ZONE",
-              "AWAY"
-            ]
-          }
-        },
-        "description": "좌석 상대팀 리스트, 비어있을 수 있습니다."
-      },
-      "com.unicsolution.ttp.ticket.dto.TicketFormDto$Response": {
-        "type": "object",
-        "properties": {
-          "eventDateTimeList": {
-            "type": "array",
-            "description": "이벤트 시작 날짜, 비어있을 수 있습니다.",
-            "items": {
-              "type": "string",
-              "description": "이벤트 시작 날짜, 비어있을 수 있습니다.",
-              "format": "date-time"
-            }
-          },
-          "seatGradeList": {
-            "type": "array",
-            "description": "좌석 등급 리스트, 비어있을 수 있습니다.",
-            "items": {
-              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-            }
-          },
-          "seatFloorList": {
-            "type": "array",
-            "description": "좌석 층/위치 리스트",
-            "items": {
-              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-            }
-          },
-          "seatZoneList": {
-            "type": "array",
-            "description": "좌석 구역 리스트",
-            "items": {
-              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-            }
-          },
-          "seatAwayList": {
-            "type": "array",
-            "description": "좌석 상대팀 리스트, 비어있을 수 있습니다.",
-            "items": {
-              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-            }
-          }
-        }
-      },
-      "com.unicsolution.ttp.config.PageListDto": {
-        "type": "object",
-        "properties": {
-          "totalPage": {
-            "type": "integer",
-            "description": "전체 페이지 수",
-            "format": "int32",
-            "example": 10
-          },
-          "totalElements": {
-            "type": "integer",
-            "description": "전체 데이터 수",
-            "format": "int64",
-            "example": 310
-          },
-          "curPageNumber": {
-            "type": "integer",
-            "description": "현재 페이지, 0부터 시작합니다.",
-            "format": "int32",
-            "example": 0
-          },
-          "curPageSize": {
-            "type": "integer",
-            "description": "현재 페이지에 표시된 데이터 수",
-            "format": "int32",
-            "example": 10
-          },
-          "first": {
-            "type": "boolean",
-            "description": "첫 페이지 여부",
-            "example": true
-          },
-          "last": {
-            "type": "boolean",
-            "description": "마지막 페이지 여부",
-            "example": false
-          },
-          "content": {
-            "type": "array",
-            "description": "현재 페이지의 데이터",
-            "items": {
-              "type": "object",
-              "description": "현재 페이지의 데이터"
-            }
-          }
-        }
-      },
-      "com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "콘서트 이벤트 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "name": {
-            "type": "string",
-            "description": "콘서트 이름",
-            "example": "콘서트"
-          },
-          "eventDateTime": {
-            "type": "array",
-            "description": "콘서트 날짜",
-            "items": {
-              "type": "string",
-              "description": "콘서트 날짜",
-              "format": "date-time"
-            }
-          }
-        },
-        "description": "이벤트 정보"
-      },
-      "com.unicsolution.ttp.image.dto.ImageGetDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "이미지 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "imageUrl": {
-            "type": "string",
-            "description": "이미지 url",
-            "example": "https://example"
-          },
-          "imageName": {
-            "type": "string",
-            "description": "이미지 이름",
-            "example": "이미지"
-          }
-        },
-        "description": "이미지 리스트, 비어있을 수 있습니다."
-      },
-      "com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "티켓 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "name": {
-            "type": "string",
-            "description": "티켓 이름, 기타 카테고리에서만 사용할 필드입니다.",
-            "example": "티켓"
-          },
-          "categoryDepth1": {
-            "type": "string",
-            "description": "대분류 카테고리",
-            "example": "카테고리1"
-          },
-          "categoryDepth2": {
-            "type": "string",
-            "description": "중간 카테고리",
-            "example": "카테고리2"
-          },
-          "categoryDepth3": {
-            "type": "string",
-            "description": "세부 카테고리",
-            "example": "카테고리3"
-          },
-          "count": {
-            "type": "integer",
-            "description": "티켓 수",
-            "format": "int32",
-            "example": 1
-          },
-          "perPrice": {
-            "type": "integer",
-            "description": "티켓 하나당 가격",
-            "format": "int64",
-            "example": 5000
-          },
-          "isNextSeat": {
-            "type": "string",
-            "description": "연석 여부",
-            "enum": [
-              "NOT_NEXT_SEAT",
-              "NEXT_SEAT",
-              "NOT_NEXT_SEAT",
-              "NEXT_SEAT"
-            ]
-          },
-          "tradeTypeList": {
-            "type": "array",
-            "description": "거래 방법 (DELIVERY - 택배, MEET - 현장)",
-            "items": {
-              "type": "string",
-              "description": "거래 방법 (DELIVERY - 택배, MEET - 현장)",
-              "enum": [
-                "DELIVERY",
-                "MEET"
-              ]
-            }
-          },
-          "tradeDescription": {
-            "type": "string",
-            "description": "거래 설명",
-            "example": "거래 설명"
-          },
-          "concertEvent": {
-            "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response"
-          },
-          "seatFloor": {
-            "type": "string",
-            "description": "좌석 층/위치 정보",
-            "example": "1F"
-          },
-          "seatZone": {
-            "type": "string",
-            "description": "좌석 구역 정보",
-            "example": "구역"
-          },
-          "seatNo": {
-            "type": "integer",
-            "description": "좌석 열 정보",
-            "format": "int32",
-            "example": 3
-          },
-          "imageList": {
-            "type": "array",
-            "description": "이미지 리스트, 비어있을 수 있습니다.",
-            "items": {
-              "$ref": "#/components/schemas/com.unicsolution.ttp.image.dto.ImageGetDto$Response"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "생성 날짜",
-            "format": "date-time"
-          }
-        }
-      },
-      "com.unicsolution.ttp.member.dto.MemberGetDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "회원 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "memberId": {
-            "type": "string",
-            "description": "회원 아이디",
-            "example": "test"
-          },
-          "email": {
-            "type": "string",
-            "description": "이메일",
-            "example": "test@naver.com"
-          },
-          "siteAlarm": {
-            "type": "boolean",
-            "description": "알림 수락 여부",
-            "example": true
-          },
-          "point": {
-            "type": "integer",
-            "description": "보유 포인트",
-            "format": "int64",
-            "example": 1000
-          },
-          "social": {
-            "type": "string",
-            "description": "소셜 로그인 주체",
-            "example": "kakao"
-          },
-          "socialProviderId": {
-            "type": "string",
-            "description": "소셜 로그인 고유 아이디",
-            "example": "kldasjf213"
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "회원 가입 날짜",
-            "format": "date-time"
-          }
-        }
-      },
-      "com.unicsolution.ttp.category.dto.CategoryGetDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "카테고리 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "categoryName": {
-            "type": "string",
-            "description": "카테고리 이름",
-            "example": "스포츠"
-          },
-          "parentId": {
-            "type": "integer",
-            "description": "부모 카테고리 pk",
-            "format": "int64",
-            "example": 3
-          }
-        }
-      },
-      "com.unicsolution.ttp.category.dto.CategoryTreeDto$Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "카테고리 pk",
-            "format": "int64",
-            "example": 1
-          },
-          "categoryName": {
-            "type": "string",
-            "description": "카테고리 이름",
-            "example": "카테고리"
-          },
-          "child": {
-            "type": "array",
-            "description": "자식 카테고리 리스트, 비어있을 수 있습니다.",
-            "items": {
-              "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
-            }
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    }
-  }
-}
+---
+openapi: 3.0.1
+info:
+  title: 티켓 거래 플랫폼 API Document
+  description: 티켓 거래 플랫폼의 서버 api 명세서
+  version: '1.0'
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+security:
+- {}
+tags:
+- name: 결제 API
+  description: 포트원을 통해 결제가 완료되는 시점에 사용되는 API입니다.
+- name: 소셜 로그인 API
+  description: 소셜 로그인 관련 API 입니다.
+- name: 카테고리 API
+  description: 카테고리 관련 API 입니다.
+- name: 주문 API
+  description: 결제 전 주문 테이블을 생성하는 API입니다.
+- name: 메일 API
+  description: 메일 관련 API 입니다.
+- name: 포인트 API
+  description: 포인트 관련 API입니다.
+- name: 좌석 API
+  description: 좌석과 관련된 API 입니다.
+- name: 회원 API
+  description: 회원과 관련된 API입니다.
+- name: 티켓 API
+  description: 티켓 관련 API 입니다.
+paths:
+  "/api/tickets/ticket/purchase/{ticketId}":
+    post:
+      tags:
+      - 티켓 API
+      summary: 티켓 구매 컨트롤러
+      description: 티켓을 구매합니다.
+      operationId: purchaseTicketController
+      parameters:
+      - name: ticketId
+        in: path
+        description: 티켓 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        '200':
+          description: 티켓 구매 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/concert/ticket":
+    post:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 생성 컨트롤러
+      description: 콘서트 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.
+      operationId: createConcertTicketController
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - request
+              type: object
+              properties:
+                imageList:
+                  type: array
+                  description: 이미지 리스트, 필수는 아닙니다.
+                  items:
+                    type: string
+                    format: binary
+                request:
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Request"
+      responses:
+        '201':
+          description: 티켓 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/baseball/ticket":
+    post:
+      tags:
+      - 티켓 API
+      summary: 야구 티켓 생성 컨트롤러
+      description: 야구 티켓 정보를 등록합니다. 이미지 파일 리스트와 함께 JSON 형식의 요청 본문을 전송해야 합니다.
+      operationId: createBaseBallTicketController
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - request
+              type: object
+              properties:
+                imageList:
+                  type: array
+                  description: 이미지 리스트, 필수는 아닙니다.
+                  items:
+                    type: string
+                    format: binary
+                request:
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request"
+      responses:
+        '201':
+          description: 티켓 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/seats/seat":
+    post:
+      tags:
+      - 좌석 API
+      summary: 좌석 생성 컨트롤러
+      description: 좌석을 생성합니다. 관리자 권한이 필요합니다.
+      operationId: createSeatController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Request"
+        required: true
+      responses:
+        '201':
+          description: 좌석 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인 필요
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 필요
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/payments/payment":
+    post:
+      tags:
+      - 결제 API
+      summary: 포인트 결제 컨트롤러
+      description: 포인트 결제에 대한 서버 검증 후 회원의 포인트를 증가시켜줍니다.
+      operationId: validatePaymentController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentValidateDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 결제 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/orders/order":
+    post:
+      tags:
+      - 주문 API
+      summary: 주문 생성 컨트롤러
+      description: 주문을 생성합니다.
+      operationId: createOrderController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 주문 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.order.dto.OrderCreateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/signup":
+    post:
+      tags:
+      - 회원 API
+      summary: 회원가입
+      description: 회원가입을 요청합니다. 일반 회원가입의 경우 사용합니다.
+      operationId: singUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto$Request"
+        required: true
+      responses:
+        '201':
+          description: 회원가입 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberSignUpDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member/logout":
+    post:
+      tags:
+      - 회원 API
+      summary: 로그아웃
+      description: 로그아웃을 요청합니다.
+      operationId: logout
+      responses:
+        '200':
+          description: 로그아웃 성공
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/login":
+    post:
+      tags:
+      - 회원 API
+      summary: 로그인
+      description: 로그인을 요청합니다. 일반 로그인의 경우 사용합니다.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 로그인 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member/find-password":
+    post:
+      tags:
+      - 회원 API
+      summary: 비밀번호 찾기
+      description: 아이디와 이메일 정보를 통해 비밀번호를 찾습니다. 소셜 회원의 경우 사용할 수 없습니다. 새로 생성된 비밀번호를
+        이메일로 발급하며 해당 비밀번호로 로그인 이후 비밀번호 변경을 유도합니다.
+      operationId: findPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindPasswordDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 비밀번호 재발급 성공
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member/find-id":
+    post:
+      tags:
+      - 회원 API
+      summary: 아이디 찾기
+      description: 이메일 정보를 통해 아이디를 찾습니다. 소셜 회원은 사용하지 못합니다.
+      operationId: findMemberId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 아이디 찾기 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberFindIdDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member/check-id":
+    post:
+      tags:
+      - 회원 API
+      summary: 아이디 중복 확인
+      description: 아이디 중복 여부를 확인합니다. 회원 가입 시 사용합니다.
+      operationId: checkMemberId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckIdDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 사용 가능한 아이디
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member/check-email":
+    post:
+      tags:
+      - 회원 API
+      summary: 이메일 중복 확인
+      description: 이메일의 중복 여부를 확인합니다. 회원 가입 시 사용합니다.
+      operationId: checkMemberEmailController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberCheckEmailDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 사용 가능한 이메일
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/mail/send-auth-mail":
+    post:
+      tags:
+      - 메일 API
+      summary: 인증 메일 전송
+      description: 인증번호를 메일로 전송합니다.
+      operationId: sendAuthMailController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 메일 전송 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailSendDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/mail/check-auth":
+    post:
+      tags:
+      - 메일 API
+      summary: 인증번호 일치 여부 확인
+      description: 사용자가 작성한 인증번호와 이메일로 발송한 인증번호가 일치하는지 확인합니다.
+      operationId: checkAuthController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 인증번호 일치함
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member/change-password":
+    patch:
+      tags:
+      - 회원 API
+      summary: 비밀번호 변경
+      description: 사용 중인 비밀번호를 변경합니다. 소셜 회원은 사용할 수 없습니다.
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 비밀번호 변경 성공
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/members/member/change-email":
+    patch:
+      tags:
+      - 회원 API
+      summary: 이메일 변경
+      description: 사용 중인 이메일을 변경합니다. 소셜 회원은 사용할 수 없습니다.
+      operationId: changeEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 이메일 변경 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/ticket/{categoryId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 티켓 등록 시 등록 필드에 표시할 정보 조회 컨트롤러
+      description: 각 티켓마다 등록 시에 조회가 필요한 정보, 좌석, 날짜
+      operationId: getFormController
+      parameters:
+      - name: categoryId
+        in: path
+        description: 최하위 카테고리 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        '200':
+          description: 등록 필드 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketFormDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/tickets/concert/{categoryId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 리스트 조회 컨트롤러
+      description: 콘서트 티켓 리스트를 페이지네이션하여 조회합니다.
+      operationId: getConcertTicketListController
+      parameters:
+      - name: categoryId
+        in: path
+        description: 최하위 카테고리 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      - name: page
+        in: query
+        description: 표시할 페이지, 0부터 시작합니다, 기본값 = 0
+        example: 0
+      - name: size
+        in: query
+        description: 페이지에 표시할 데이터 수, 기본값 = 10
+        example: 10
+      responses:
+        '200':
+          description: 티켓 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/tickets/concert/ticket/{ticketId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 콘서트 티켓 상세 조회 컨트롤러
+      description: 콘서트 티켓의 정보를 상세 조회합니다.
+      operationId: getConcertTicketController
+      parameters:
+      - name: ticketId
+        in: path
+        description: 티켓 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        '200':
+          description: 티켓 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/tickets/baseball/{categoryId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 야구 티켓 리스트 조회 컨트롤러
+      description: 야구 티켓 리스트를 페이지네이션하여 조회합니다.
+      operationId: getBaseBallTicketListController
+      parameters:
+      - name: categoryId
+        in: path
+        description: 최하위 카테고리 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      - name: page
+        in: query
+        description: 표시할 페이지, 0부터 시작합니다, 기본값 = 0
+        example: 0
+      - name: size
+        in: query
+        description: 페이지에 표시할 데이터 수, 기본값 = 10
+        example: 10
+      responses:
+        '200':
+          description: 티켓 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/tickets/baseball/ticket/{ticketId}":
+    get:
+      tags:
+      - 티켓 API
+      summary: 야구 티켓 상세 조회 컨트롤러
+      description: 야구 티켓의 정보를 상세 조회합니다.
+      operationId: getBaseBallTicketController
+      parameters:
+      - name: ticketId
+        in: path
+        description: 티켓 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        '200':
+          description: 티켓 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/points/history":
+    get:
+      tags:
+      - 포인트 API
+      summary: 포인트 충전 및 사용 내역 조회
+      description: 포인트를 충전하거나 사용 또는 판매 수익에 대한 내역을 조회하며 필터링 기능이 있습니다.
+      operationId: getPointList
+      parameters:
+      - name: startDate
+        in: query
+        description: 조회 시작 날짜, 필수값은 아닙니다.
+        required: false
+        content:
+          "*/*":
+            schema:
+              type: string
+              example: '2025-08-08'
+              default: 오늘 날짜
+      - name: endDate
+        in: query
+        description: 조회 마지막 날짜, 필수값은 아닙니다.
+        required: false
+        content:
+          "*/*":
+            schema:
+              type: string
+              example: '2025-08-08'
+              default: 오늘 날짜
+      - name: sortType
+        in: query
+        description: 정렬 방법, LATEST - 최신순, OLDEST - 오래된순, 필수는 아닙니다.
+        required: false
+        content:
+          "*/*":
+            schema:
+              type: string
+              example: LATEST
+              default: LATEST
+              enum:
+              - LATEST
+              - OLDEST
+      - name: page
+        in: query
+        description: 현재 페이지, 필수값은 아니지만 페이지 변경에 따라 값을 변경해줘야 합니다.
+        content:
+          "*/*":
+            schema:
+              type: string
+              example: 0
+              default: '0'
+      - name: size
+        in: query
+        description: 현재 페이지에 표시할 데이터 수, 필수값은 아닙니다.
+        content:
+          "*/*":
+            schema:
+              type: string
+              example: 10
+              default: '10'
+      responses:
+        '200':
+          description: 포인트 내역 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.config.PageListDto"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/oauth2/token":
+    get:
+      tags:
+      - 소셜 로그인 API
+      summary: 소셜 회원 엑세스 토큰 발급
+      description: 소셜 로그인 성공 후 서버로부터 받은 code 값을 사용해 액세스 토큰 발급 받습니다.
+      operationId: getToken
+      parameters:
+      - name: code
+        in: query
+        description: 서버로부터 받은 암호화된 코드
+        required: true
+        content:
+          "*/*":
+            schema:
+              type: string
+      responses:
+        '200':
+          description: 엑세스 토큰 발급 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberLoginDto$Response"
+        '400':
+          description: 클라이언트 오류
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상치 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/members/member":
+    get:
+      tags:
+      - 회원 API
+      summary: 로그인한 회원 정보 조회
+      description: 로그인한 회원의 정보를 조회합니다.
+      operationId: getMemberController
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.member.dto.MemberGetDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - 회원 API
+      summary: 회원 탈퇴
+      description: 회원 탈퇴를 진행합니다. 회원 데이터는 소프트딜리트 처리됩니다.
+      operationId: deleteMemberController
+      responses:
+        '200':
+          description: 회원 탈퇴 성공
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 로그인이 필요한 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트 호출
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예상하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+  "/api/categories/tree/{categoryId}":
+    get:
+      tags:
+      - 카테고리 API
+      summary: 카테고리에 대한 정보와 자식 카테고리 리스트를 함께 조회
+      description: 카테고리 정보와 자식 리스트까지 함께 조회합니다. 자식 리스트는 비어있을 수 있습니다.
+      operationId: getCategoryController
+      parameters:
+      - name: categoryId
+        in: path
+        description: 카테고리 pk
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        '200':
+          description: 카테고리 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/categories/parent":
+    get:
+      tags:
+      - 카테고리 API
+      summary: 대분류 카테고리 리스트 조회
+      description: 대분류 카테고리 리스트를 조회합니다.
+      operationId: getParentCategoryList
+      responses:
+        '200':
+          description: 대분류 카테고리 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          description: 티켓 pk
+          format: int64
+          example: 1
+    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Response:
+      type: object
+      properties:
+        concertTicketId:
+          type: integer
+          description: 생성된 콘서트 티켓 pk
+          format: int64
+          example: 1
+    com.unicsolution.ttp.ticket.dto.ConcertTicketCreateDto$Request:
+      required:
+      - categoryId
+      - seatFloor
+      - seatGrade
+      - seatZone
+      type: object
+      properties:
+        name:
+          type: string
+          description: 티켓 이름, 기타 카테고리를 위한 컬럼입니다. 그 외의 경우 필수값이 아닙니다. 20자 내로 작성해야 합니다.
+          example: 티켓
+        ticketCount:
+          type: integer
+          description: 티켓 수량
+          format: int32
+          example: 1
+        ticketPerPrice:
+          type: integer
+          description: 티켓 하나당 가격
+          format: int64
+          example: 5000
+        isNextSeat:
+          type: string
+          description: 연석 여부
+          enum:
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+        tradeTypeList:
+          type: array
+          description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+          items:
+            type: string
+            description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+            enum:
+            - DELIVERY
+            - MEET
+        tradeDescription:
+          type: string
+          description: 거래 설명, 필수가 아닙니다.
+          example: description
+        seatGrade:
+          type: string
+          description: 좌석 등급
+          example: 등급
+        seatFloor:
+          type: string
+          description: 좌석 층/위치
+          example: 위치
+        seatZone:
+          type: string
+          description: 좌석 구역
+          example: 구역
+        seatNo:
+          type: integer
+          description: 좌석 열
+          format: int32
+          example: 1
+        eventDateTime:
+          type: string
+          description: 콘서트 날짜
+          format: date-time
+        categoryId:
+          type: integer
+          description: 카테고리 pk, 가장 최하위 카테고리입니다.
+          format: int64
+          example: 1
+      description: 콘서트 티켓 생성 정보 데이터
+    com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request:
+      required:
+      - categoryId
+      - seatAway
+      - seatFloor
+      - seatZone
+      type: object
+      properties:
+        name:
+          type: string
+          description: 티켓 이름, 기타 카테고리를 위한 컬럼입니다. 그 외의 경우 필수값이 아닙니다. 20자 내로 작성해야 합니다.
+          example: 티켓
+        ticketCount:
+          type: integer
+          description: 티켓 수량
+          format: int32
+          example: 1
+        ticketPerPrice:
+          type: integer
+          description: 티켓 하나당 가격
+          format: int64
+          example: 5000
+        isNextSeat:
+          type: string
+          description: 연석 여부
+          enum:
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+        tradeTypeList:
+          type: array
+          description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+          items:
+            type: string
+            description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+            enum:
+            - DELIVERY
+            - MEET
+        tradeDescription:
+          type: string
+          description: 거래 설명, 필수가 아닙니다.
+          example: description
+        seatFloor:
+          type: string
+          description: 좌석 층/위치
+          example: 위치
+        seatNo:
+          type: integer
+          description: 좌석 열
+          format: int32
+          example: 1
+        seatAway:
+          type: string
+          description: 좌석 상대팀
+          example: VS 두산
+        seatZone:
+          type: string
+          description: 좌석 존
+          example: A
+        eventDateTime:
+          type: string
+          description: 경기 날짜
+          format: date-time
+        categoryId:
+          type: integer
+          description: 카테고리 pk, 가장 최하위 카테고리입니다.
+          format: int64
+          example: 1
+      description: 야구 티켓 생성 정보 데이터
+    com.unicsolution.ttp.seat.dto.SeatCreateDto$Response:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 생성된 좌석 이름
+          example: 좌석
+    com.unicsolution.ttp.seat.dto.SeatCreateDto$Request:
+      required:
+      - categoryId
+      - seatName
+      type: object
+      properties:
+        seatName:
+          type: string
+          description: 좌석 이름
+          example: 좌석
+        categoryId:
+          type: integer
+          description: 카테고리 pk, 최하위 카테고리를 등록합니다.
+          format: int64
+          example: 1
+        seatType:
+          type: string
+          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
+          enum:
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+          - GRADE
+          - FLOOR
+          - AWAY
+          - ZONE
+    com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response:
+      type: object
+      properties:
+        price:
+          type: integer
+          description: 결제 금액
+          format: int64
+          example: 1000
+        permitDateTime:
+          type: string
+          description: 결제 날짜
+          format: date-time
+    com.unicsolution.ttp.payment.dto.PaymentValidateDto$Request:
+      required:
+      - impUid
+      - orderId
+      type: object
+      properties:
+        orderId:
+          type: integer
+          description: 주문 pk
+          format: int64
+          example: 1
+        impUid:
+          type: string
+          description: 결제 고유 번호
+          example: imp_fafdsaeuiryqjkh
+    com.unicsolution.ttp.order.dto.OrderCreateDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 주문 pk
+          format: int64
+          example: 1
+        pgCode:
+          type: string
+          description: 가맹점 식별코드
+          example: IMP89120490
+        merchantUid:
+          type: string
+          description: 고유 주문번호
+          example: 20250801-hfksdlhfkehafjdslaghle
+        itemName:
+          type: string
+          description: 상품 이름
+          example: 1000 포인트
+        price:
+          type: integer
+          description: 가격
+          format: int64
+          example: 1000
+        buyerEmail:
+          type: string
+          description: 구매자 이메일
+          example: test@naver.com
+        buyerId:
+          type: string
+          description: 구매자 아이디
+          example: test
+    com.unicsolution.ttp.order.dto.OrderCreateDto$Request:
+      type: object
+      properties:
+        price:
+          minimum: 100
+          type: integer
+          description: 구입하는 가격, 최소 가격은 100입니다.
+          format: int64
+          example: 100
+    com.unicsolution.ttp.member.dto.MemberSignUpDto$Response:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 회원가입된 아이디
+          example: test
+    com.unicsolution.ttp.member.dto.MemberSignUpDto$Request:
+      required:
+      - confirmPassword
+      - email
+      - memberId
+      - password
+      type: object
+      properties:
+        memberId:
+          pattern: "^[a-z0-9]{6,12}$"
+          type: string
+          description: 아이디
+          example: test
+        password:
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+          type: string
+          description: 비밀번호
+          example: abc1234
+        confirmPassword:
+          type: string
+          description: 비밀번호 확인
+          example: abc1234
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 이메일
+          example: test@naver.com
+    com.unicsolution.ttp.member.dto.MemberLoginDto$Response:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: 액세스 토큰
+          example: fjasdk;ghjioewjaklasdfkvljiorjewklafjdjafjgkheraklhkljdhsfjkv
+        memberId:
+          type: string
+          description: 회원 아이디
+          example: test
+    com.unicsolution.ttp.member.dto.MemberLoginDto$Request:
+      required:
+      - memberId
+      - password
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 아이디
+          example: test
+        password:
+          type: string
+          description: 비밀번호
+          example: abc1234
+    com.unicsolution.ttp.member.dto.MemberFindPasswordDto$Request:
+      required:
+      - email
+      - memberId
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 회원 아이디
+          example: test
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.member.dto.MemberFindIdDto$Response:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 조회된 회원 아이디
+          example: test
+    com.unicsolution.ttp.member.dto.MemberFindIdDto$Request:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.member.dto.MemberCheckIdDto$Request:
+      required:
+      - memberId
+      type: object
+      properties:
+        memberId:
+          pattern: "^[a-z0-9]{6,12}$"
+          type: string
+          description: 중복 확인할 아이디
+          example: test
+    com.unicsolution.ttp.member.dto.MemberCheckEmailDto$Request:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 중복 확인할 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.mail.dto.MailSendDto$Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 전송 받을 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.mail.dto.MailSendDto$Request:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 받을 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 인증된 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.mail.dto.MailAuthCheckDto$Request:
+      required:
+      - authNum
+      - email
+      type: object
+      properties:
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 인증번호를 전송받은 이메일
+          example: test@naver.com
+        authNum:
+          pattern: "^[0-9]{4}$"
+          type: string
+          description: 인증번호
+          example: '2123'
+    com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request:
+      required:
+      - confirmPassword
+      - curPassword
+      - newPassword
+      type: object
+      properties:
+        curPassword:
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+          type: string
+          description: 변경 전 패스워드
+          example: abc123
+        newPassword:
+          pattern: "^(?=.*[A-Za-z].*)(?=.*[0-9!@#$%^&*()\\-_=+{};:,<.>].*).{4,16}$"
+          type: string
+          description: 변경할 패스워드
+          example: abc123
+        confirmPassword:
+          type: string
+          description: 변경할 패스워드 확인
+          example: abc123
+    com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 변경된 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.member.dto.MemberChangeEmailDto$Request:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+          type: string
+          description: 변경할 이메일 주소
+          example: test@naver.com
+    com.unicsolution.ttp.seat.dto.SeatGetDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 좌석 pk
+          format: int64
+          example: 1
+        seatName:
+          type: string
+          description: 좌석 이름
+          example: 좌석
+        seatType:
+          type: string
+          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
+          enum:
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+      description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
+    com.unicsolution.ttp.ticket.dto.TicketFormDto$Response:
+      type: object
+      properties:
+        eventDateTimeList:
+          type: array
+          description: 이벤트 시작 날짜, 비어있을 수 있습니다.
+          items:
+            type: string
+            description: 이벤트 시작 날짜, 비어있을 수 있습니다.
+            format: date-time
+        seatGradeList:
+          type: array
+          description: 좌석 등급 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+        seatFloorList:
+          type: array
+          description: 좌석 층/위치 리스트
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+        seatZoneList:
+          type: array
+          description: 좌석 구역 리스트
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+        seatAwayList:
+          type: array
+          description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+    com.unicsolution.ttp.config.PageListDto:
+      type: object
+      properties:
+        totalPage:
+          type: integer
+          description: 전체 페이지 수
+          format: int32
+          example: 10
+        totalElements:
+          type: integer
+          description: 전체 데이터 수
+          format: int64
+          example: 310
+        curPageNumber:
+          type: integer
+          description: 현재 페이지, 0부터 시작합니다.
+          format: int32
+          example: 0
+        curPageSize:
+          type: integer
+          description: 현재 페이지에 표시된 데이터 수
+          format: int32
+          example: 10
+        first:
+          type: boolean
+          description: 첫 페이지 여부
+          example: true
+        last:
+          type: boolean
+          description: 마지막 페이지 여부
+          example: false
+        content:
+          type: array
+          description: 현재 페이지의 데이터
+          items:
+            type: object
+            description: 현재 페이지의 데이터
+    com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 콘서트 이벤트 pk
+          format: int64
+          example: 1
+        name:
+          type: string
+          description: 콘서트 이름
+          example: 콘서트
+        eventDateTime:
+          type: array
+          description: 콘서트 날짜
+          items:
+            type: string
+            description: 콘서트 날짜
+            format: date-time
+      description: 이벤트 정보
+    com.unicsolution.ttp.image.dto.ImageGetDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 이미지 pk
+          format: int64
+          example: 1
+        imageUrl:
+          type: string
+          description: 이미지 url
+          example: https://example
+        imageName:
+          type: string
+          description: 이미지 이름
+          example: 이미지
+      description: 이미지 리스트, 비어있을 수 있습니다.
+    com.unicsolution.ttp.ticket.dto.ConcertTicketGetDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 티켓 pk
+          format: int64
+          example: 1
+        name:
+          type: string
+          description: 티켓 이름, 기타 카테고리에서만 사용할 필드입니다.
+          example: 티켓
+        categoryDepth1:
+          type: string
+          description: 대분류 카테고리
+          example: 카테고리1
+        categoryDepth2:
+          type: string
+          description: 중간 카테고리
+          example: 카테고리2
+        categoryDepth3:
+          type: string
+          description: 세부 카테고리
+          example: 카테고리3
+        count:
+          type: integer
+          description: 티켓 수
+          format: int32
+          example: 1
+        perPrice:
+          type: integer
+          description: 티켓 하나당 가격
+          format: int64
+          example: 5000
+        isNextSeat:
+          type: string
+          description: 연석 여부
+          enum:
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+          - NOT_NEXT_SEAT
+          - NEXT_SEAT
+        tradeTypeList:
+          type: array
+          description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+          items:
+            type: string
+            description: 거래 방법 (DELIVERY - 택배, MEET - 현장)
+            enum:
+            - DELIVERY
+            - MEET
+        tradeDescription:
+          type: string
+          description: 거래 설명
+          example: 거래 설명
+        concertEvent:
+          "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response"
+        seatFloor:
+          type: string
+          description: 좌석 층/위치 정보
+          example: 1F
+        seatZone:
+          type: string
+          description: 좌석 구역 정보
+          example: 구역
+        seatNo:
+          type: integer
+          description: 좌석 열 정보
+          format: int32
+          example: 3
+        imageList:
+          type: array
+          description: 이미지 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.image.dto.ImageGetDto$Response"
+        createdAt:
+          type: string
+          description: 생성 날짜
+          format: date-time
+    com.unicsolution.ttp.member.dto.MemberGetDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 회원 pk
+          format: int64
+          example: 1
+        memberId:
+          type: string
+          description: 회원 아이디
+          example: test
+        email:
+          type: string
+          description: 이메일
+          example: test@naver.com
+        siteAlarm:
+          type: boolean
+          description: 알림 수락 여부
+          example: true
+        point:
+          type: integer
+          description: 보유 포인트
+          format: int64
+          example: 1000
+        social:
+          type: string
+          description: 소셜 로그인 주체
+          example: kakao
+        socialProviderId:
+          type: string
+          description: 소셜 로그인 고유 아이디
+          example: kldasjf213
+        createdAt:
+          type: string
+          description: 회원 가입 날짜
+          format: date-time
+    com.unicsolution.ttp.category.dto.CategoryGetDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 카테고리 pk
+          format: int64
+          example: 1
+        categoryName:
+          type: string
+          description: 카테고리 이름
+          example: 스포츠
+        parentId:
+          type: integer
+          description: 부모 카테고리 pk
+          format: int64
+          example: 3
+    com.unicsolution.ttp.category.dto.CategoryTreeDto$Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 카테고리 pk
+          format: int64
+          example: 1
+        categoryName:
+          type: string
+          description: 카테고리 이름
+          example: 카테고리
+        child:
+          type: array
+          description: 자식 카테고리 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
