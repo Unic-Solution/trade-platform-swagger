@@ -22,8 +22,6 @@ tags:
   description: 메일 관련 API 입니다.
 - name: 포인트 API
   description: 포인트 관련 API입니다.
-- name: 좌석 API
-  description: 좌석과 관련된 API 입니다.
 - name: 회원 API
   description: 회원과 관련된 API입니다.
 - name: 티켓 API
@@ -178,60 +176,6 @@ paths:
                   type: string
         '401':
           description: 비로그인 상태
-          content:
-            application/json:
-              schema:
-                type: string
-        '404':
-          description: 존재하지 않는 엔드포인트
-          content:
-            application/json:
-              schema:
-                type: string
-        '500':
-          description: 예측하지 못한 서버 에러
-          content:
-            application/json:
-              schema:
-                type: string
-      security:
-      - bearerAuth: []
-  "/api/seats/seat":
-    post:
-      tags:
-      - 좌석 API
-      summary: 좌석 생성 컨트롤러
-      description: 좌석을 생성합니다. 관리자 권한이 필요합니다.
-      operationId: createSeatController
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Request"
-        required: true
-      responses:
-        '201':
-          description: 좌석 생성 성공
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Response"
-        '400':
-          description: 클라이언트 에러
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-        '401':
-          description: 로그인 필요
-          content:
-            application/json:
-              schema:
-                type: string
-        '403':
-          description: 권한 필요
           content:
             application/json:
               schema:
@@ -697,6 +641,60 @@ paths:
             application/json:
               schema:
                 type: string
+  "/api/events/event":
+    post:
+      tags:
+      - 이벤트 API
+      summary: 티켓 등록에 필요한 정보 생성 컨트롤러
+      description: 관리자 권한이 필요합니다.
+      operationId: createEventController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.EventCreateDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 생성 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.EventCreateDto$Response"
+        '400':
+          description: 클라이언트 에러
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 없음
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: 존재하지 않는 엔드포인트
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
   "/api/members/member/change-password":
     patch:
       tags:
@@ -787,57 +785,6 @@ paths:
                 type: string
         '500':
           description: 예상하지 못한 서버 에러
-          content:
-            application/json:
-              schema:
-                type: string
-      security:
-      - bearerAuth: []
-  "/api/tickets/ticket/{categoryId}":
-    get:
-      tags:
-      - 티켓 API
-      summary: 티켓 등록 시 등록 필드에 표시할 정보 조회 컨트롤러
-      description: 각 티켓마다 등록 시에 조회가 필요한 정보, 좌석, 날짜
-      operationId: getFormController
-      parameters:
-      - name: categoryId
-        in: path
-        description: 최하위 카테고리 pk
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
-      responses:
-        '200':
-          description: 등록 필드 정보 조회 성공
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.ticket.dto.TicketFormDto$Response"
-        '400':
-          description: 클라이언트 에러
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-        '401':
-          description: 비로그인 상태
-          content:
-            application/json:
-              schema:
-                type: string
-        '404':
-          description: 존재하지 않는 엔드포인트
-          content:
-            application/json:
-              schema:
-                type: string
-        '500':
-          description: 예측하지 못한 서버 에러
           content:
             application/json:
               schema:
@@ -1244,13 +1191,12 @@ paths:
                 type: string
       security:
       - bearerAuth: []
-  "/api/categories/tree/{categoryId}":
+  "/api/events/event/{categoryId}":
     get:
       tags:
-      - 카테고리 API
-      summary: 카테고리에 대한 정보와 자식 카테고리 리스트를 함께 조회
-      description: 카테고리 정보와 자식 리스트까지 함께 조회합니다. 자식 리스트는 비어있을 수 있습니다.
-      operationId: getCategoryController
+      - 이벤트 API
+      summary: 티켓 등록에 필요한 정보 조회 컨트롤러
+      operationId: getEventController
       parameters:
       - name: categoryId
         in: path
@@ -1262,11 +1208,11 @@ paths:
         example: 1
       responses:
         '200':
-          description: 카테고리 정보 조회 성공
+          description: 조회 성공
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
+                "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.EventGetDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -1275,6 +1221,12 @@ paths:
                 type: array
                 items:
                   type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
         '404':
           description: 존재하지 않는 엔드포인트
           content:
@@ -1287,22 +1239,56 @@ paths:
             application/json:
               schema:
                 type: string
-  "/api/categories/parent":
+      security:
+      - bearerAuth: []
+  "/api/categories":
     get:
       tags:
       - 카테고리 API
-      summary: 대분류 카테고리 리스트 조회
-      description: 대분류 카테고리 리스트를 조회합니다.
-      operationId: getParentCategoryList
+      summary: 전체 카테고리 리스트 조회
+      description: 자식 카테고리 리스트를 포함하는 카테고리 전체 리스트 조회
+      operationId: getCategoriesController
       responses:
         '200':
-          description: 대분류 카테고리 리스트 조회 성공
+          description: 전체 카테고리 리스트 조회 성공
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
+                  "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: 예측하지 못한 서버 에러
+          content:
+            application/json:
+              schema:
+                type: string
+  "/api/events/event/hard-delete":
+    delete:
+      tags:
+      - 이벤트 API
+      summary: 이벤트 하드 딜리트 컨트롤러
+      description: 관리자 권한이 필요합니다.
+      operationId: hardDeleteEventController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.EventHardDeleteDto$Request"
+        required: true
+      responses:
+        '200':
+          description: 삭제 성공
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.EventCreateDto$Response"
         '400':
           description: 클라이언트 에러
           content:
@@ -1311,6 +1297,18 @@ paths:
                 type: array
                 items:
                   type: string
+        '401':
+          description: 비로그인 상태
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: 권한 없음
+          content:
+            application/json:
+              schema:
+                type: string
         '404':
           description: 존재하지 않는 엔드포인트
           content:
@@ -1323,6 +1321,8 @@ paths:
             application/json:
               schema:
                 type: string
+      security:
+      - bearerAuth: []
 components:
   schemas:
     com.unicsolution.ttp.ticket.dto.TicketPurchaseDto$Response:
@@ -1410,6 +1410,8 @@ components:
           description: 카테고리 pk, 가장 최하위 카테고리입니다.
           format: int64
           example: 1
+        seatAway:
+          type: string
       description: 콘서트 티켓 생성 정보 데이터
     com.unicsolution.ttp.ticket.dto.BaseBallTicketCreateDto$Request:
       required:
@@ -1480,41 +1482,9 @@ components:
           description: 카테고리 pk, 가장 최하위 카테고리입니다.
           format: int64
           example: 1
+        seatGrade:
+          type: string
       description: 야구 티켓 생성 정보 데이터
-    com.unicsolution.ttp.seat.dto.SeatCreateDto$Response:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 생성된 좌석 이름
-          example: 좌석
-    com.unicsolution.ttp.seat.dto.SeatCreateDto$Request:
-      required:
-      - categoryId
-      - seatName
-      type: object
-      properties:
-        seatName:
-          type: string
-          description: 좌석 이름
-          example: 좌석
-        categoryId:
-          type: integer
-          description: 카테고리 pk, 최하위 카테고리를 등록합니다.
-          format: int64
-          example: 1
-        seatType:
-          type: string
-          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
-          enum:
-          - GRADE
-          - FLOOR
-          - ZONE
-          - AWAY
-          - GRADE
-          - FLOOR
-          - AWAY
-          - ZONE
     com.unicsolution.ttp.payment.dto.PaymentValidateDto$Response:
       type: object
       properties:
@@ -1735,6 +1705,58 @@ components:
           type: string
           description: 인증번호
           example: '2123'
+    com.unicsolution.ttp.event.dto.EventCreateDto$Response:
+      type: object
+      properties:
+        eventId:
+          type: integer
+          description: 생성한 이벤트 pk
+          format: int64
+          example: 1
+    com.unicsolution.ttp.event.dto.EventCreateDto$Request:
+      required:
+      - categoryId
+      type: object
+      properties:
+        dateTimeList:
+          type: array
+          description: 이벤트 날짜, 필수값이 아닙니다.
+          items:
+            type: string
+            description: 이벤트 날짜, 필수값이 아닙니다.
+            format: date-time
+        seatCreateRequestList:
+          type: array
+          description: 좌석 정보 리스트
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatCreateDto$Request"
+        categoryId:
+          type: integer
+          description: 소분류 카테고리 pk
+          format: int64
+          example: 1
+    com.unicsolution.ttp.seat.dto.SeatCreateDto$Request:
+      required:
+      - seatName
+      type: object
+      properties:
+        seatName:
+          type: string
+          description: 좌석 이름
+          example: 좌석
+        seatType:
+          type: string
+          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
+          enum:
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+          - GRADE
+          - FLOOR
+          - AWAY
+          - ZONE
+      description: 좌석 정보 리스트
     com.unicsolution.ttp.member.dto.MemberChangePasswordDto$Request:
       required:
       - confirmPassword
@@ -1773,61 +1795,6 @@ components:
           type: string
           description: 변경할 이메일 주소
           example: test@naver.com
-    com.unicsolution.ttp.seat.dto.SeatGetDto$Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: 좌석 pk
-          format: int64
-          example: 1
-        seatName:
-          type: string
-          description: 좌석 이름
-          example: 좌석
-        seatType:
-          type: string
-          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
-          enum:
-          - GRADE
-          - FLOOR
-          - ZONE
-          - AWAY
-          - GRADE
-          - FLOOR
-          - ZONE
-          - AWAY
-      description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
-    com.unicsolution.ttp.ticket.dto.TicketFormDto$Response:
-      type: object
-      properties:
-        eventDateTimeList:
-          type: array
-          description: 이벤트 시작 날짜, 비어있을 수 있습니다.
-          items:
-            type: string
-            description: 이벤트 시작 날짜, 비어있을 수 있습니다.
-            format: date-time
-        seatGradeList:
-          type: array
-          description: 좌석 등급 리스트, 비어있을 수 있습니다.
-          items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-        seatFloorList:
-          type: array
-          description: 좌석 층/위치 리스트
-          items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-        seatZoneList:
-          type: array
-          description: 좌석 구역 리스트
-          items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
-        seatAwayList:
-          type: array
-          description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
-          items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
     com.unicsolution.ttp.config.PageListDto:
       type: object
       properties:
@@ -1865,26 +1832,6 @@ components:
           items:
             type: object
             description: 현재 페이지의 데이터
-    com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: 콘서트 이벤트 pk
-          format: int64
-          example: 1
-        name:
-          type: string
-          description: 콘서트 이름
-          example: 콘서트
-        eventDateTime:
-          type: array
-          description: 콘서트 날짜
-          items:
-            type: string
-            description: 콘서트 날짜
-            format: date-time
-      description: 이벤트 정보
     com.unicsolution.ttp.image.dto.ImageGetDto$Response:
       type: object
       properties:
@@ -1957,8 +1904,6 @@ components:
           type: string
           description: 거래 설명
           example: 거래 설명
-        concertEvent:
-          "$ref": "#/components/schemas/com.unicsolution.ttp.event.dto.ConcertEventGetDto$Response"
         seatFloor:
           type: string
           description: 좌석 층/위치 정보
@@ -1967,6 +1912,10 @@ components:
           type: string
           description: 좌석 구역 정보
           example: 구역
+        seatGrade:
+          type: string
+          description: 좌석 등급 정보
+          example: 등급
         seatNo:
           type: integer
           description: 좌석 열 정보
@@ -1977,6 +1926,14 @@ components:
           description: 이미지 리스트, 비어있을 수 있습니다.
           items:
             "$ref": "#/components/schemas/com.unicsolution.ttp.image.dto.ImageGetDto$Response"
+        concertDate:
+          type: string
+          description: 콘서트 날짜
+          format: date-time
+        sellerId:
+          type: string
+          description: 판매자 아이디
+          example: seller
         createdAt:
           type: string
           description: 생성 날짜
@@ -1997,10 +1954,6 @@ components:
           type: string
           description: 이메일
           example: test@naver.com
-        siteAlarm:
-          type: boolean
-          description: 알림 수락 여부
-          example: true
         point:
           type: integer
           description: 보유 포인트
@@ -2018,23 +1971,61 @@ components:
           type: string
           description: 회원 가입 날짜
           format: date-time
-    com.unicsolution.ttp.category.dto.CategoryGetDto$Response:
+    com.unicsolution.ttp.event.dto.EventGetDto$Response:
+      type: object
+      properties:
+        dateTimeList:
+          type: array
+          description: 날짜 리스트
+          items:
+            type: string
+            description: 날짜 리스트
+            format: date-time
+        seatGradeList:
+          type: array
+          description: 좌석 등급 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+        seatFloorList:
+          type: array
+          description: 좌석 층/위치 리스트
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+        seatZoneList:
+          type: array
+          description: 좌석 구역 리스트
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+        seatAwayList:
+          type: array
+          description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
+          items:
+            "$ref": "#/components/schemas/com.unicsolution.ttp.seat.dto.SeatGetDto$Response"
+    com.unicsolution.ttp.seat.dto.SeatGetDto$Response:
       type: object
       properties:
         id:
           type: integer
-          description: 카테고리 pk
+          description: 좌석 pk
           format: int64
           example: 1
-        categoryName:
+        seatName:
           type: string
-          description: 카테고리 이름
-          example: 스포츠
-        parentId:
-          type: integer
-          description: 부모 카테고리 pk
-          format: int64
-          example: 3
+          description: 좌석 이름
+          example: 좌석
+        seatType:
+          type: string
+          description: 좌석 타입 (GRADE - 등급, FLOOR - 층/위치, ZONE - 구역,  AWAY - 상대팀)
+          enum:
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+          - GRADE
+          - FLOOR
+          - ZONE
+          - AWAY
+      description: 좌석 상대팀 리스트, 비어있을 수 있습니다.
     com.unicsolution.ttp.category.dto.CategoryTreeDto$Response:
       type: object
       properties:
@@ -2047,11 +2038,34 @@ components:
           type: string
           description: 카테고리 이름
           example: 카테고리
+        categoryType:
+          type: string
+          description: 카테고리 타입, 기타 카테고리 판별용, NORMAL - 일반 카테고리, ETC - 기타 카테고리
+          enum:
+          - NORMAL
+          - ETC
+          - NORMAL
+          - ETC
         child:
           type: array
-          description: 자식 카테고리 리스트, 비어있을 수 있습니다.
+          description: 자식 카테고리 리스트, 비어있을 수 있습니다, 현재 dto의 정보가 똑같이 들어가 있습니다.
           items:
-            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryGetDto$Response"
+            "$ref": "#/components/schemas/com.unicsolution.ttp.category.dto.CategoryTreeDto$Response"
+    com.unicsolution.ttp.event.dto.EventHardDeleteDto$Request:
+      required:
+      - deleteString
+      - eventId
+      type: object
+      properties:
+        eventId:
+          type: integer
+          description: 삭제할 이벤트 pk
+          format: int64
+          example: 1
+        deleteString:
+          type: string
+          description: 영구 삭제의 경우 입력할 문자열
+          example: 영구 삭제
   securitySchemes:
     bearerAuth:
       type: http
